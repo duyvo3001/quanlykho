@@ -1,0 +1,109 @@
+<!-- Account -->
+  <hr class="my-0" />
+  <div class="card-body">
+      <div class="row">
+        <div class="col-lg-12 mb-4 order-0">
+          <div class="card mb-4">
+            <div class="mb-2 row">
+              <div class="col-md-6">
+                <h5 class="card-header">Nhập : Linh kiện </h5>
+              </div>
+            </div>
+            <form action="/editItemLinhkien" method="post">
+              <%for(let key in data) {%>
+                <div class="card-body">
+                  <div class="mb-2 row">
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Mã
+                      Hàng</label>
+                    <div class="col-md-5">
+
+                      <input class="form-control" type="text" name="MaLK" id="html5-text-input" value="<%= data[key].MaLK%>" />
+                    </div>
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Tên Hàng
+                    </label>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text" name="TenLK" id="html5-text-input"
+                        value="<%= data[key].TenLK%>" />
+                    </div>
+                  </div>
+                  <div class="mb-2 row">
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Thương Hiệu</label>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text" name="ThuongHieu" id="html5-text-input"
+                        value="<%= data[key].ThuongHieu %>" />
+                    </div>
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Màu
+                    </label>
+                    <div class="col-md-5">
+                      <div class="">
+                        <select id="defaultSelect" class="form-select" name="Color" value="<%= data[key].Color %>">
+                          <option value="0">Mặc đinh</option>
+                          <option value="white">Trắng</option>
+                          <option value="black">Đen</option>
+                          <option value="red">Đỏ</option>
+                          <option value="yellow">Vàng</option>
+                          <option value="blue">Xanh</option>
+                          <option value="silver">Bạc</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-2 row">
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Đơn
+                      Vị</label>
+                    <div class="col-md-5">
+                      <div class="">
+                        <select id="defaultSelect" class="form-select" name="Donvi" value="<%= data[key].Donvi %>">
+                          <option value="cai">Cái</option>
+                          <option value="thung">Thùng</option>
+                          <option value="bich">Bịch</option>
+                        </select>
+                      </div>
+                    </div>
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Số Lượng
+                    </label>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text" name="Soluong" id="html5-text-input"
+                        value="<%= data[key].Soluong %>" />
+                    </div>
+                  </div>
+                  <div class="mb-2 row">
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Giá Bán Lẻ</label>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text" name="GiaBanLe" id="html5-text-input"
+                        value="<%= data[key].GiaBanLe %>" />
+                    </div>
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Mã Kho
+                    </label>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text" name="MaKho" id="html5-text-input"
+                        value="<%= data[key].MaKho %>" />
+                    </div>
+                  </div>
+                  <div class="mb-2 row">
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Tình trạng hàng
+                    </label>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text" name="TinhTrangHang" id="html5-text-input"
+                        value="<%= data[key].TinhTrangHang %>" />
+                    </div>
+                    <label for="html5-text-input" class="col-md-1 col-form-label">Nhà cung cấp
+                    </label>
+                    <div class="col-md-5">
+                      <input class="form-control" type="text" name="NCC" id="html5-text-input"
+                        value="<%= data[key].NCC %>" />
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-md-5">
+                      <button type="submit" class="btn btn-outline-danger">Sửa</button>
+                    </div>
+                  </div>
+                </div>
+                <%}%>
+            </form>
+          </div>
+        </div>
+      </div>
+  </div>
+<!-- /Account -->

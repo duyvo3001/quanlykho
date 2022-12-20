@@ -1,0 +1,76 @@
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Content table ----------------------------------------------------------------------->
+        <div class="row">
+            <div class="col-lg-12 mb-4 order-0">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>MÃ HÀNG</th>
+                                        <th>TÊN HÀNG</th>
+                                        <th>THƯƠNG HIỆU</th>
+                                        <th>NCC</th>
+                                        <th>MÀU</th>
+                                        <th>ĐƠN VỊ</th>
+                                        <th>SỐ LƯỢNG</th>
+                                        <th>MÃ KHO</th>
+                                        <th>GIÁ BÁN LẺ</th>
+                                        <th>TÌNH TRẠNG HÀNG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for(let key in result) { %>
+                                        <tr>
+                                            <td>
+                                                <i class="fab fa-angular fa-lg text-danger me-1"></i>
+                                                <strong>
+                                                    <%= result[key].MaLK %>
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <%= result[key].TenLK %>
+                                            </td>
+                                            <td>
+                                                <ul>
+                                                    <%= result[key].ThuongHieu %>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <ul>
+                                                    <%= result[key].NCC %>
+                                                </ul>
+                                            </td>
+                                            <td><span class="badge bg-label-primary me-1">
+                                                    <%= result[key].Color %>
+                                                </span></td>
+                                            <td>
+                                                <%= result[key].Donvi %>
+                                            </td>
+                                            <td>
+                                                <%= result[key].Soluong %>
+                                            </td>
+                                            <td><i>
+                                                    <%= result[key].MaKho %>
+                                                </i></td>
+                                            <td><i>
+                                                    <%= result[key].GiaBanLe %>
+                                                </i></td>
+                                            <td><i>
+                                                    <%= result[key].TinhTrangHang %>
+                                                </i></td>
+                                        </tr>
+                                        <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

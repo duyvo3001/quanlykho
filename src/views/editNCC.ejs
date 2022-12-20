@@ -1,0 +1,56 @@
+<!-- Account -->
+<hr class="my-0" />
+<div class="card-body">
+  <form action="/editItemNCC" method="POST">
+    <div class="row">
+      <div class="col-lg-12 mb-4 order-0">
+        <div class="card mb-4">
+          <div class="mb-2 row">
+            <div class="col-md-6">
+              <h5 class="card-header">Nhập : Nhà cung cấp</h5>
+            </div>
+            <div class="col-md-6">
+              <form action="/SearchNCC" method="post" class="d-flex" onsubmit="return false">
+                <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" />
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+              </form>
+            </div>
+          </div>
+          <form action="/editItemNCC" method="post">
+            <%for(let key in data) {%>
+              <div class="card-body">
+                <div class="mb-2 row">
+                  <label for="html5-text-input" class="col-md-1 col-form-label">Mã
+                    Nhà Cung Cấp</label>
+                  <div class="col-md-5">
+                    <input class="form-control" type="text" name="MaNCC" value="<%= data[key].MaNCC%>" />
+                  </div>
+                  <label for="html5-text-input" class="col-md-1 col-form-label">Tên Nhà Cung Cấp
+                  </label>
+                  <div class="col-md-5">
+                    <input class="form-control" type="text" name="TenNCC" value="<%= data[key].TenNCC%>" />
+                  </div>
+                </div>
+                <div class="mb-2 row">
+                  <label for="html5-text-input" class="col-md-1 col-form-label">Địa Chỉ</label>
+                  <div class="col-md-5">
+                    <input class="form-control" type="text" name="DiaChi" value="<%= data[key].DiaChi%>" />
+                  </div>
+                  <label for="html5-text-input" class="col-md-1 col-form-label">Số Điện Thoại</label>
+                  <div class="col-md-5">
+                    <input class="form-control" type="text" name="SDT" value="<%= data[key].SDT%>" />
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <button type="submit" class="btn btn-outline-danger">Sửa</button>
+                </div>
+              </div>
+              <%}%>
+          </form>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- /Account -->

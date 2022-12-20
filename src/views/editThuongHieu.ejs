@@ -1,0 +1,29 @@
+<!-- Account -->
+  <hr class="my-0" />
+  <div class="card-body">
+    <form action="/editItemThuongHieu" method="post">
+      <%for(let key in data) {%>
+      <div class="card-body">
+          <div class="mb-2 row">
+              <label for="html5-text-input" class="col-md-1 col-form-label">Mã
+                  Thương Hiệu</label>
+              <div class="col-md-5">
+                  <input class="form-control" type="text" name="MaThuongHieu" value="<%= data[key].MaThuongHieu %>"  />
+              </div>
+              <label for="html5-text-input" class="col-md-1 col-form-label">Tên Thương Hiệu
+              </label>
+              <div class="col-md-5">
+                  <input class="form-control" type="text" name="TenThuongHieu" value="<%= data[key].TenThuongHieu %>"  />
+              </div>
+          </div>
+          <div>
+              <div class="col-md-5">
+                  <button type="submit" class="btn btn-outline-danger">SỬA</button>
+              </div>
+          </div>
+      </div>
+      <%}%>
+  </form>
+  </div>
+
+<!-- /Account -->
