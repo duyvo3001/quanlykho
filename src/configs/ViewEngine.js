@@ -1,7 +1,7 @@
 import expressLayouts from "express-ejs-layouts";
 import express from 'express';
 const configViewEngine = (app)=>{
-    app
+    app 
     .use(express.static('./dist'))
     .set('dist','./dist')
     //____________________________________________

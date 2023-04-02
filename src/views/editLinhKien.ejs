@@ -9,7 +9,7 @@
                 <h5 class="card-header">Nhập : Linh kiện </h5>
               </div>
             </div>
-            <form action="/editItemLinhkien" method="post">
+            <form action="/editStock" method="post">
               <%for(let key in data) {%>
                 <div class="card-body">
                   <div class="mb-2 row">
@@ -29,8 +29,8 @@
                   <div class="mb-2 row">
                     <label for="html5-text-input" class="col-md-1 col-form-label">Thương Hiệu</label>
                     <div class="col-md-5">
-                      <input class="form-control" type="text" name="ThuongHieu" id="html5-text-input"
-                        value="<%= data[key].ThuongHieu %>" />
+                      <input class="form-control" type="text" name="MaThuongHieu" id="html5-text-input"
+                        value="<%= data[key].MaThuongHieu %>" />
                     </div>
                     <label for="html5-text-input" class="col-md-1 col-form-label">Màu
                     </label>
@@ -90,8 +90,8 @@
                     <label for="html5-text-input" class="col-md-1 col-form-label">Nhà cung cấp
                     </label>
                     <div class="col-md-5">
-                      <input class="form-control" type="text" name="NCC" id="html5-text-input"
-                        value="<%= data[key].NCC %>" />
+                      <input class="form-control" type="text" name="MaNCC" id="html5-text-input"
+                        value="<%= data[key].MaNCC %>" />
                     </div>
                   </div>
                   <div>

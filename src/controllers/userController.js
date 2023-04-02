@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
-import sqlConfig from '../configs/connecDB';
-const sql = require("mssql");
+import connec from '../configs/connectDBmongo.js'
+import model from '../models/NhanVien.model.js'
+
 import { _pass, test_pass } from '../services/hassPass';
 
 let getLoginPage = (req, res) => {
@@ -8,38 +9,39 @@ let getLoginPage = (req, res) => {
 }
 
 let createUser = async (req, res) => {
-  let { hoten, ngaysinh, sex, user_nv, pass_nv, repass_nv, phone, address, accessrights } = req.body;
-  console.log(hoten, ngaysinh, sex, user_nv, pass_nv, repass_nv, phone, address, accessrights);
+  let { hoten, ngaysinh, sex, user_nv, pass_nv, repass_nv, phone, email, address, accessrights } = req.body;
+  if(hoten.length < 5) 
+    return res.send('hoten must be at least 5');
   let _Pass = _pass(pass_nv.trim(), repass_nv.trim());
 
-  await sql.connect(sqlConfig);
-  const result = await sql.query(
-    `SELECT USER_NV FROM NhanVien where USER_NV='${user_nv.trim()}'`
-  );
+  const result = await connec.getDB().collection('NhanVien').find({
+    USER_NV: user_nv
+  }).toArray()
+
   //
-  if ((await result).rowsAffected == 1) { // tạo 1 function riêng để check user
-    console.log("registered");
+  if (Object.keys(result).length == 1) { // tạo 1 function riêng để check user
     return res.redirect("/");
-  } else {
+  }
+  else {
     if (pass_nv === repass_nv) {
-      let countUsers = await sql.query(
-        `select Max(CONVERT(int, MaNV)) as tinh from NhanVien`
-      );
-      let count = +countUsers.recordsets[0][0].tinh + 1;
-      console.log(count)
-      const CreateUser = sql.query(`
-                insert into NhanVien (MaNV,TenNV,GioiTinh,NgaySinh,DiaChi,User_NV,Password_NV,SDT,accessrights)
-                values(
-                  '${count}',
-                  '${hoten.trim()}',
-                   ${parseInt(sex)},
-                   ${ngaysinh},
-                  '${address.trim()}',
-                  '${user_nv}',
-                  '${_Pass.createpass.hash}',
-                  '${phone.trim()}',
-                  '${accessrights}')`
-      );
+      const dataUser = await connec.getDB().collection('NhanVien').count()
+
+      let count = dataUser + 1;
+
+      let data = {
+        MaNV: String(count),
+        TenNV: hoten,
+        GioiTinh: +sex,
+        DiaChi: address,
+        NgaySinh: ngaysinh,
+        USER_NV: user_nv,
+        PASSWORD: _Pass.createpass.hash,
+        SDT: phone,
+        Email: email,
+        NgayTao: Date.now(),
+        AccessRight: accessrights,
+      }
+      await model.NhanVienmodel(data)
       res.cookie("user_id", count);
       return res.redirect("/registerstaff");
 
@@ -52,46 +54,41 @@ let createUser = async (req, res) => {
 
 let SignUser = async (req, res) => {
 
-  await sql.connect(sqlConfig);
-  let { user_nv, pass_nv } = req.body;
-  let Repassword = "",user_id ='';
-  
+  let { user_nv, pass_nv } = req.body.formData;
+  let Repassword = "", user_id = '';
   //check special characters
   let format = /[']+/;
   if (format.test(user_nv)) {
-      return res.send({ error: 'chứa kí tự đặc biệt'})
-  } 
-
-  if (user_nv == '' || pass_nv == '')
-    return res.send("tài khoản hoặc mật khẩu để trống")
-
-  const result = await sql.query(
-    `SELECT MaNV, USER_NV, PASSWORD_NV FROM NhanVien where USER_NV='${user_nv.trim()}'`
-  );
-  if ((await result).rowsAffected == 0)
-    return res.send('tài khoản đăng nhập không đúng ')
-
-  for (let i = 0; i < result.rowsAffected; i++) {
-    Repassword = result.recordset[i].PASSWORD_NV;
-    user_id = result.recordset[i].MaNV;
+    return res.status(200).json({ message: 'chứa kí tự k hợp lệ'})
   }
 
-  if ((await result).rowsAffected == 1) {
+  if (user_nv == '' || pass_nv == '')
+    return res.status(200).json({message :"tài khoản hoặc mật khẩu để trống"})
+
+  const result = await connec.getDB().collection('NhanVien').find({
+    USER_NV: user_nv.trim()
+  }).toArray()
+
+  if ( Object.keys(result).length == 0)
+    return res.status(200).json({message :'tài khoản đăng nhập không đúng '})
+
+  for (let i = 0; i < Object.keys(result).length; i++) {
+    Repassword = result[i].PASSWORD;
+    user_id = result[i].MaNV;
+  }
+
+  if (Object.keys(result).length == 1) {
     let _RePassTest = test_pass(pass_nv.trim(), Repassword.trim());
 
     if (_RePassTest.test_Hash == true) {
       const data = req.body;
       const access_token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '3400s' })
-      req.session.authenticated = true;
-      res.cookie("access_token", access_token, {
-        expires: new Date(Date.now() + 900000),
-        httpOnly: true,
-      });
-      return res.redirect("/homeLinhKien");
+      console.log(access_token);
+      return res.status(200).json({signin :"oke",access_token })   
     }
 
     else {
-      return res.send("sai mat khau");
+      return res.status(200).json({message :"wrong pass"}) 
     }
 
   }

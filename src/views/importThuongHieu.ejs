@@ -11,13 +11,13 @@
                             <h5 class="card-header">Nhập : Thương hiệu</h5>
                         </div>
                         <div class="col-md-6">
-                            <form action="/SearchThuongHieu" method="post" class="d-flex" onsubmit="return false">
+                            <form action="/SearchBrand" method="post" class="d-flex" onsubmit="return false">
                                 <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" />
                                 <button class="btn btn-outline-primary" type="submit">Search</button>
                             </form>
                         </div>
                     </div>
-                    <form action="/PostThuongHieu" method="post">
+                    <form action="/PostBrand" method="post">
                         <div class="card-body">
                             <div class="mb-2 row">
                                 <label for="html5-text-input" class="col-md-1 col-form-label">Mã
@@ -75,12 +75,12 @@
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <form action="/editItemThuongHieuPage/<%=result[key].MaThuongHieu%>" method="get">
+                                                        <form action="/editBrand/<%=result[key].MaThuongHieu%>" method="get">
                                                             <button type="submit" class="dropdown-item">
                                                                 <i class="bx bx-trash me-2">Edit</i>
                                                             </button>
                                                         </form>
-                                                        <form action="/deleteItemThuongHieu/<%=result[key].MaThuongHieu%>" method="post">
+                                                        <form action="/deleteBrand/<%=result[key].MaThuongHieu%>" method="post">
                                                             <button type="submit" class="dropdown-item">
                                                                 <i class="bx bx-trash me-2">Delete</i>
                                                             </button>

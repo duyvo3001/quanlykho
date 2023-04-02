@@ -1,6 +1,4 @@
-import { request } from "express";
-import  { result, resultThuongHieu, resultNCC } from "../services/renderdataHang";
-const sql = require("mssql");
+import   data  from "../services/renderdataHang";
 const searchfunc = (search)=>{
     var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
     if(format.test(search)){
@@ -9,21 +7,21 @@ const searchfunc = (search)=>{
       return false;
     }
 }
-const SearchLinhKien = async (req, res) => {
+const SearchStock = async (req, res) => {
     let { search } = req.body;
     searchfunc(search) ? res.send('chứa kí tự đặt biệt') : 
-    res.render('importLinhKien.ejs', { result: await result('',search) })
+    res.render('ImportStock.ejs', { result: await data.result('Hang','',search) })
 }
 
-const SearchNCC = async (req, res) => {
+const SearchSupplier = async (req, res) => {
     let { search } = req.body;
     searchfunc(search) ? res.send('chứa kí tự đặt biệt') : 
-    res.render('importNCC.ejs', { result: await resultNCC('',search) })
+    res.render('importNCC.ejs', { result: await data.result('NCC','',search) })
 }
 
-const SearchThuongHieu = async (req, res) => {
+const SearchBrand = async (req, res) => {
     let { search } = req.body;
     searchfunc(search) ? res.send('chứa kí tự đặt biệt') : 
-    res.render('importThuongHieu.ejs', { result: await resultThuongHieu('',search) })
+    res.render('importThuongHieu.ejs', { result: await data.result('ThuongHieu','',search) })
 }
-export default { SearchLinhKien, SearchNCC, SearchThuongHieu }
+export default { SearchStock, SearchSupplier, SearchBrand }

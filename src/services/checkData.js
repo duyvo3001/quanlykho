@@ -1,6 +1,6 @@
 //check data input
 export const searchfunc = (search) => {
-    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    var format = /[!@#$%^&*()_+=\[\]{};':"\\|.<>\/?]+/;
     if (format.test(search)) {
         return true;
     } else {

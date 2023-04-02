@@ -6,9 +6,7 @@
   "scripts": {
     "start": "node ./src/app.js",
     "dev": "nodemon --exec babel-node ./src/app.js",
-    "webpack": "webpack -w",
-    "test": "jest",
-    "test-types": "node puppeteer.config.js"
+    "webpack": "webpack -w"
   },
   "repository": {
     "type": "git",
@@ -21,7 +19,11 @@
   },
   "homepage": "https://github.com/duyvo3001/quanlykho#readme",
   "dependencies": {
+    "@babel/core": "^7.19.6",
+    "@babel/node": "^7.19.1",
+    "@babel/preset-env": "^7.19.4",
     "axios": "^1.2.0",
+    "babel-loader": "^8.2.5",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "bootstrap": "^5.2.3",
@@ -34,21 +36,19 @@
     "express-session": "^1.17.3",
     "helmet": "^6.0.0",
     "html2canvas": "^1.4.1",
+    "joi": "^17.8.3",
     "jsdom": "^20.0.2",
     "jsonwebtoken": "^8.5.1",
     "jspdf": "^2.5.1",
     "mdb-ui-kit": "^6.0.0",
+    "mongodb": "^5.1.0",
+    "mongoose": "^7.0.3",
+    "mongoose-paginate-v2": "^1.7.1",
     "monk": "^7.3.4",
     "morgan": "^1.10.0",
-    "mssql": "^9.0.1",
     "rotating-file-stream": "^3.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.6",
-    "@babel/node": "^7.19.1",
-    "@babel/preset-env": "^7.19.4",
-    "babel-loader": "^8.2.5",
-    "jest-puppeteer": "^6.2.0",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.20",
     "source-map-loader": "^4.0.1",

@@ -1,10 +1,11 @@
-import sqlConfig from '../configs/connecDB';
+import connec from '../configs/connectDBmongo.js'
+import modelHang from '../models/Hang.model'
+import modelNCC from '../models/NCC.model'
+import modelThuongHieu from '../models/ThuongHieu.model'
 import { checkfunc } from '../services/checkData'
-import { result, resultThuongHieu, resultNCC } from "../services/renderdataHang";
-
-const sql = require("mssql");
-const srcfile = './src/exportfile.docx';
-
+import data from "../services/renderdataHang";  
+const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 //check special characters
 const CheckSpecialCharacters = (arrData) => {
   let checkArr = checkfunc(arrData)
@@ -13,205 +14,219 @@ const CheckSpecialCharacters = (arrData) => {
 }
 
 // -------------------------------------linh kien----------------------------------------------------
-let importLinhKien = async (req, res) => {
-  await sql.connect(sqlConfig);
-  let { MaLK, TenLK, ThuongHieu, NCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body;
-  let arrData = [MaLK, TenLK, ThuongHieu, NCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
-  //check null 
-  for (let i = 0; i < checknull.length; i++) {
+let ImportLinhkien = async (req, res) => {
+
+  let { MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body.formData;
+  let arrData = [MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
+
+  //check trống hàng 
+  for (let i = 0; i < arrData.length; i++) {
     if (arrData[i] == '') return res.send('không để trống hàng');
   }
+
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
     return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+
   // kiểm tra trùng lập 
-  let querycheck = `select * from Hang where MaLK = '${MaLK.trim()}'`;
-  const test = await sql.query(querycheck);
-  if ((await test).rowsAffected == 1)
+  let querycheck = await connec.getDB().collection('Hang').find({
+    MaLK
+  }).toArray()
+
+  //check trùng mã nhập hàng 
+  if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã nhập hàng')
 
-  let query = `
-  insert into Hang(MaLK,TenLK,Donvi,Soluong,NgayNhap,ThuongHieu,NCC,Color,MaKho,GiaBanLe,TinhTrangHang) 
-  values(
-    '${MaLK.trim()}'
-    ,'${TenLK.trim()}'
-    ,'${Donvi.trim()}' 
-    ,${parseInt(Soluong)}
-    ,convert(varchar,getdate(),20)
-    ,'${ThuongHieu.trim()}'
-    ,'${NCC.trim()}'
-    ,'${Color.trim()}' 
-    ,'${MaKho.trim()}' 
-    ,${parseFloat(GiaBanLe)}
-    ,'${TinhTrangHang.trim()}');
-  `
-  const result = await sql.query(query);
-  return res.redirect('/homeLinhKien');
+  let data = {
+    MaLK,
+    TenLK,
+    Donvi,
+    Soluong,
+    NgayNhap: Date.now(),
+    NgayXuat: '01/01/2001',
+    MaThuongHieu,
+    MaNCC,
+    Color,
+    MaKho,
+    GiaBanLe,
+    TinhTrangHang,
+  }
+  await modelHang.Hangmodel(data)
+
+  res.status(200).json('message', 'oke');
 }
 
 let adjustmentPricePage = async (req, res) => {
-  res.render('adjustmentPrice.ejs', { result: await result('renderData', '') })
+  let { MaLK } = req.params;
+  res.render('adjustmentPrice.ejs', { result: await data.result('Hang', 'render', MaLK) })
 }
 
 let adjustmentPrice = async (req, res) => {
-  await sql.connect(sqlConfig);
   let { MaLK, GiaBanLe } = req.body;
   let arrData = [MaLK, GiaBanLe]
+
   // check null 
   for (let i = 0; i < arrData.length; i++) {
     if (arrData[i] == '') return res.send('không để trống hàng cần sửa')
   }
+
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false) return res.error({ error: 'chứa kí tự đặc biệt', Character: e })
-  console.log('haha')
-  let query = `update Hang set GiaBanLe=${parseFloat(GiaBanLe)} where MaLK='${MaLK}'`
-  const result = await sql.query(query);
+
+  await connec.getDB().collection('Hang').updateOne(
+    { MaLK },
+    { $set: { GiaBanLe } }
+  )
+
   return res.redirect('/adjustmentPricePage');
 }
 //render page linh kien
 let getManagePage = async (req, res) => {
-  res.render('importLinhKien.ejs', { result: await result('renderData', '') });
+  res.status(200).json({ result: await data.result('Hang', 'renderData', '') }) ;
 }
 //post delete item linh kien  
-let deleteItemLinhkien = async (req, res) => {
-  await sql.connect(sqlConfig);
-  let item = req.params.item
-  let query = `delete from Hang where MaLK='${item}'`
-  await sql.query(query);
-  res.redirect('/homeLinhKien')
+let deleteStock = async (req, res) => {
+  let MaLK = req.params.item
+  await connec.getDB().collection('Hang').deleteMany({ MaLK })
+  res.redirect('/ImportStock')
 }
 //post edit item linh kien 
-let editItemLinhKien = async (req, res) => {
-  await sql.connect(sqlConfig);
-  let { MaLK, TenLK, ThuongHieu, NCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body;
-  let arrData = [MaLK, TenLK, ThuongHieu, NCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
+let editStock = async (req, res) => {
+
+  let { MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body;
+  let arrData = [MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
+
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
     return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+
   //kiểm tra trùng mã lập 
-  let querycheck = `select * from Hang where MaLK = '${MaLK.trim()}'`;
-  const test = await sql.query(querycheck);
-  if ((await test).rowsAffected == 1)
+  let querycheck = connec.getDB().collection('Hang').find({ MaLK }).toArray()
+  if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã sửa hàng')
 
-  let query = `update Hang set  MaLK='${MaLK}', TenLK='${TenLK}', ThuongHieu='${ThuongHieu}', NCC='${NCC}', Color='${Color}', Donvi='${Donvi}', Soluong='${Soluong}', MaKho='${MaKho}', GiaBanLe='${GiaBanLe}', TinhTrangHang='${TinhTrangHang}' 
-  where MaLK='${MaLK}'`;
-  await sql.query(query);
-  res.redirect('/homeLinhKien')
+  await connec.getDB().collection('Hang').updateOne(
+    { MaLK }, { $set: { TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } }
+  );
+
+  res.redirect('/ImportStock')
 }
 //page edit item Linh kien
-let editItemLinhKienPage = async (req, res) => {
-  await sql.connect(sqlConfig);
-  let item = req.params.item
-  let data = [];
-  let query = `select * from Hang where MaLK = '${item}'`
-  let result = await sql.query(query);
-  data = result.recordset
+let editStockPage = async (req, res) => {
+  let MaLK = req.params.item
+  let data = await connec.getDB().collection('Hang').find({
+    MaLK
+  }).toArray()
   res.render('editLinhKien.ejs', { data })
 }
+
 //----------------------------------------- Nhà cung cấp------------------------------------
+const NCC = require('../models/NCC.model')
 let getNCCpage = async (req, res) => {
-  res.render('importNCC.ejs', { result: await resultNCC('renderData', '') });
+
+  const test = await NCC.paginate()
+  console.log(test);
+
+  res.status(200).json({ result: await data.result('NCC', 'renderData', '') });
 }
 let importNCC = async (req, res) => {
-  await sql.connect(sqlConfig);
+  console.log(req);
+  console.log("test");
+  let { MaNCC, TenNCC, DiaChi, SDT , Email } = req.body.formData;
+
+  let arrData = [MaNCC, TenNCC, DiaChi, SDT ,Email]
+  console.log(arrData);
+  //check special characters
+  let e = CheckSpecialCharacters(arrData)
+  if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+
+  // check mã trùng lập 
+  let querycheck = await connec.getDB().collection('NCC').find({
+    MaNCC
+  }).toArray()
+
+  if (Object.keys(querycheck).length == 1)
+    return res.send('trùng mã nhập hàng')
+
+  let data = {
+    MaNCC, TenNCC, DiaChi, SDT , Email
+  }
+  await modelNCC.NCCmodel(data)
+  return res.status(200).json('message', 'oke');
+}
+
+let deleteSupplier  = async (req, res) => {
+  let MaNCC = req.params.item
+  await connec.getDB().collection('NCC').deleteMany({ MaNCC })
+  res.redirect('/HomeSupplier ')
+}
+let editSupplierPage = async (req, res) => {
+
+  let MaNCC = req.params.item
+  let data = await connec.getDB().collection('NCC').find({
+    MaNCC
+  }).toArray()
+  res.render('editNCC.ejs', { data })
+}
+let editSupplier = async (req, res) => {
   let { MaNCC, TenNCC, DiaChi, SDT } = req.body;
   let arrData = [MaNCC, TenNCC, DiaChi, SDT]
   //check special characters
   let e = CheckSpecialCharacters(arrData)
-  if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
-  // check mã trùng lập 
-  let querycheck = `select * from NCC where MaNCC = ${MaNCC.trim()}`;
-  const test = await sql.query(querycheck);
-  if ((await test).rowsAffected == 1)
-    return res.send('trùng mã nhập hàng')
-
-  let query = `insert into NCC values('${MaNCC.trim()}','${TenNCC.trim()}','${DiaChi.trim()}','${SDT.trim()}')`;
-  const result = await sql.query(query);
-  return res.redirect('/homeNCC');
-}
-
-let deleteItemNCC = async (req, res) => {
-  await sql.connect(sqlConfig);
-  let item = req.params.item
-  let query = `delete from NCC where MaNCC='${item}'`
-  await sql.query(query);
-  res.redirect('/homeNCC')
-}
-let editItemNCCPage = async (req, res) => {
-  await sql.connect(sqlConfig);
-  let item = req.params.item
-  let data = [];
-  let query = `select * from NCC where MaNCC = '${item}'`
-  let result = await sql.query(query);
-  data = result.recordset
-  res.render('editNCC.ejs', { data })
-}
-let editItemNCC = async (req, res) => {
-  await sql.connect(sqlConfig);
-  let { MaNCC, TenNCC, DiaChi, SDT } = req.body;
-  let arrData = [ MaNCC, TenNCC, DiaChi, SDT]
-  //check special characters
-  let e = CheckSpecialCharacters(arrData)
   if (e != false)
     return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
-    
+
   //kiểm tra trùng mã lập 
-  let querycheck = `select * from NCC where MaNCC = '${MaNCC.trim()}'`;
-  const test = await sql.query(querycheck);
-  if ((await test).rowsAffected == 1)
+  let querycheck = connec.getDB().collection('NCC').find({ MaNCC }).toArray()
+  if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã Nhà cung cấp')
-  let query = `update NCC set MaNCC = '${MaNCC.trim()}' , TenNCC='${TenNCC.trim()}' , DiaChi ='${DiaChi.trim()}' , SDT = '${SDT.trim()}' where MaNCC = '${MaNCC}'`
-  await sql.query(query);
-  res.redirect('/homeNCC');
+  await connec.getDB().collection('NCC').updateOne(
+    { MaNCC }, { $set: { TenNCC, DiaChi, SDT } }
+  );
+  res.redirect('/HomeSupplier ');
 }
 //-----------------------------------------thương hiệu-----------------------------------------
 let getThuongHieupage = async (req, res) => { // render page import 
-  res.render('importThuongHieu.ejs', { result: await resultThuongHieu('renderData', '') });
+  res.status(200).json({ result: await data.result('ThuongHieu', 'renderData', '') });
 }
-let editItemThuongHieuPage = async (req, res) => {// render page edit
-  await sql.connect(sqlConfig);
-  let item = req.params.item
-  let data = [];
-  let query = `select * from ThuongHieu where MaThuongHieu = '${item}'`
-  let result = await sql.query(query);
-  data = result.recordset
+let editBrandPage = async (req, res) => {// render page edit
+  let MaThuongHieu = req.params.item
+  let data = await connec.getDB().collection('ThuongHieu').find({
+    MaThuongHieu
+  }).toArray()
   res.render('editThuongHieu.ejs', { data });
 }
 let importThuongHieu = async (req, res) => {
-  await sql.connect(sqlConfig);
-  let { MaThuongHieu, TenThuongHieu } = req.body;
+  console.log(req);
+  let { MaThuongHieu, TenThuongHieu } = req.body.formData;
   //check special characters
   let arrData = [MaThuongHieu, TenThuongHieu]
+console.log(arrData);
   let e = CheckSpecialCharacters(arrData)
   if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+
   // check mã trùng lập 
-  let querycheck = `select * from ThuongHieu where MaThuongHieu = '${MaThuongHieu.trim()}'`;
-  const test = await sql.query(querycheck);
-  if ((await test).rowsAffected == 1)
+  let querycheck = await connec.getDB().collection('ThuongHieu').find({
+    MaThuongHieu
+  }).toArray()
+  if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã nhập hàng')
 
-  let query = `insert into ThuongHieu values('${MaThuongHieu.trim()}','${TenThuongHieu.trim()}')`;
-  const result = await sql.query(query);
-  console.log(result);
-  return res.redirect('/homeThuongHieu');
-}
-let deleteItemThuongHieu = async (req, res) => {
+  let data = { MaThuongHieu, TenThuongHieu }
+  await modelThuongHieu.ThuongHieumodel(data)
 
-  await sql.connect(sqlConfig);
-  let item = req.params.item
-  if(!item){
-    return res.send('không để trống mã ')
-  }
-  let query = `delete from ThuongHieu where MaThuongHieu='${item}'`
-  await sql.query(query);
-  res.redirect('/homeThuongHieu')
+  res.status(200).json('message', 'oke');
 }
-let editItemThuongHieu = async (req, res) => {
-  await sql.connect(sqlConfig);
+let deleteBrand = async (req, res) => {
+  let MaThuongHieu = req.params.item
+  await connec.getDB().collection('ThuongHieu').deleteMany({ MaThuongHieu })
+  res.redirect('/HomeBrand')
+}
+let editBrand = async (req, res) => {
+
   let { MaThuongHieu, TenThuongHieu } = req.body;
   let arrData = [MaThuongHieu, TenThuongHieu]
 
@@ -221,14 +236,14 @@ let editItemThuongHieu = async (req, res) => {
     return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
 
   //kiểm tra trùng mã lập 
-  let querycheck = `select * from ThuongHieu where MaThuongHieu = '${MaThuongHieu.trim()}'`;
-  const test = await sql.query(querycheck);
-  if ((await test).rowsAffected == 1)
+  let querycheck = connec.getDB().collection('ThuongHieu').find({ MaThuongHieu }).toArray()
+  if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã sửa hàng')
 
-  let query = `update ThuongHieu set MaThuongHieu = '${MaThuongHieu.trim()}' , TenThuongHieu='${TenThuongHieu.trim()}'  where MaThuongHieu = '${MaThuongHieu}'`
-  await sql.query(query);
-  res.redirect('/homeThuongHieu');
+  await connec.getDB().collection('ThuongHieu').updateOne(
+    { MaThuongHieu }, { $set: { TenThuongHieu } }
+  );
+  res.redirect('/HomeBrand');
 }
 //--------------------------------------------------------------------------
 export default
@@ -236,18 +251,18 @@ export default
     adjustmentPrice,
     adjustmentPricePage,
     getManagePage,
-    importLinhKien,
-    editItemLinhKien,
-    deleteItemLinhkien,
-    editItemLinhKienPage,
+    ImportLinhkien,
+    editStock,
+    deleteStock,
+    editStockPage,
     getNCCpage,
     importNCC,
-    deleteItemNCC,
-    editItemNCC,
-    editItemNCCPage,
+    deleteSupplier ,
+    editSupplier,
+    editSupplierPage,
     getThuongHieupage,
     importThuongHieu,
-    deleteItemThuongHieu,
-    editItemThuongHieuPage,
-    editItemThuongHieu
+    deleteBrand,
+    editBrandPage,
+    editBrand
   };      

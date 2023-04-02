@@ -1,74 +1,37 @@
-import sqlConfig from '../configs/connecDB';
-const sql = require("mssql");
+import connec from '../configs/connectDBmongo.js'
 
 // render data from table Hang 
-const result = async (getvalueHang, valueMaLK) => {
-    const Renderdata = async ()=>{
-        await sql.connect(sqlConfig)
-        let data = [];
-        data = await sql.query(check());
-        return data.recordset
+const result = async (kind, key, value) => {
+    const Renderdata = async () => {
+        let data = await check();
+        return data
     }
-    const check = () =>{
-        let query = '' ;
-        if (getvalueHang === 'renderData') {
-            query = `SELECT TOP (10)*
-               FROM [quanlylinhkien].[dbo].[Hang] 
-               ORDER BY  NgayNhap DESC
-               `;
+
+    const check = async () => {
+        let query = '';
+        if (key === 'renderData') {
+            query = await connec.getDB().collection(kind).find({}).toArray()
         }
-        else if (getvalueHang === 'renderDatanull') {
-            query = `select * from Hang where MaLK=''`
+        else if (key === 'renderDatanull') {
+            query = []
         }
         else {
-            query = `select * from Hang where MaLK='${valueMaLK}'`
+            if (kind === 'ThuongHieu')
+                query = await connec.getDB().collection(kind).find({
+                    MaThuongHieu: value
+                }).toArray()
+            else if (kind === 'Hang')
+                query = await connec.getDB().collection(kind).find({
+                    MaLK: value
+                }).toArray()
+            else
+                query = await connec.getDB().collection(kind).find({
+                    MaNCC: value
+                }).toArray()
         }
         return query;
     }
     return Renderdata()
 }
-const resultThuongHieu = async (key, value) => {
-    const Renderdata = async ()=>{
-        await sql.connect(sqlConfig)
-        let data = [];
-        data = await sql.query(check());
-        return data.recordset
-    }
-    const check = () =>{
-        let query = '' ;
-        if(key === 'renderData'){
-            query = `SELECT TOP (10)* from ThuongHieu order by MaThuongHieu desc`
-        }
-        else if(key === 'renderDatanull'){
-            query = `select * from ThuongHieu where MaThuongHieu=''`
-        }
-        else {
-            query = `select * from ThuongHieu where MaThuongHieu='${value}'`
-        }
-        return query;
-    }
-    return Renderdata()
-}
-const resultNCC = async (key,value) => {
-    const Renderdata = async ()=>{
-        await sql.connect(sqlConfig)
-        let data = [];
-        data = await sql.query(check());
-        return data.recordset
-    }
-    const check = () =>{
-        let query = '' ;
-        if(key === 'renderData'){
-            query = `SELECT TOP (10)* from NCC order by MaNCC desc`
-        }
-        else if(key === 'renderDatanull'){
-            query = `select * from NCC where MaNCC =''`
-        }
-        else {
-            query = `select * from NCC where MaNCC='${value}'`
-        }
-        return query;
-    }
-    return Renderdata()
-}
-export { result, resultThuongHieu, resultNCC };
+
+export default{ result };

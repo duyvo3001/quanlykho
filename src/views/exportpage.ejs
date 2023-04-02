@@ -9,9 +9,9 @@
               <div class="col-md-3">
                 <input class="form-control" type="text" name="MaLK" id="html5-text-input" />
               </div>
-              <label for="html5-text-input" class="col-md-1 col-form-label">Thương Hiệu</label>
+              <label for="html5-text-input" class="col-md-1 col-form-label">Mã Thương Hiệu</label>
               <div class="col-md-3">
-                <input class="form-control" type="text" name="ThuongHieu" id="html5-text-input" />
+                <input class="form-control" type="text" name="MaThuongHieu" id="html5-text-input" />
               </div>
               </label>
               <div class="col-md-2">
@@ -37,8 +37,8 @@
                   <tr>
                     <th>MÃ HÀNG</th>
                     <th>TÊN HÀNG</th>
-                    <th>THƯƠNG HIỆU</th>
-                    <th>NCC</th>
+                    <th>Mã THƯƠNG HIỆU</th>
+                    <th>Mã NCC</th>
                     <th>MÀU</th>
                     <th>ĐƠN VỊ</th>
                     <th>SỐ LƯỢNG</th>
@@ -60,10 +60,10 @@
                         <%= result[key]?.TenLK %>
                       </td>
                       <td>
-                        <%= result[key]?.ThuongHieu %>
+                        <%= result[key]?.MaThuongHieu %>
                       </td>
                       <td>
-                        <%= result[key]?.NCC %>
+                        <%= result[key]?.MaNCC %>
                       </td>
                       <td><span class="badge bg-label-primary me-1">
                           <%= result[key]?.Color %>

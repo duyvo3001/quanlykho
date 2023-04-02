@@ -11,17 +11,16 @@
                             <h5 class="card-header">Nhập : Nhà cung cấp</h5>
                         </div>
                         <div class="col-md-6">
-                            <form action="/SearchNCC" method="post" class="d-flex" onsubmit="return false">
+                            <form action="/SearchSupplier" method="post" class="d-flex" onsubmit="return false">
                                 <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search" />
                                 <button class="btn btn-outline-primary" type="submit" >Search</button>
                             </form>
                         </div>
                     </div>
-                    <form action="/PostNCC" method="post">
+                    <form action="/PostSupplier " method="post">
                         <div class="card-body">
                             <div class="mb-2 row">
-                                <label for="html5-text-input" class="col-md-1 col-form-label">Mã
-                                    Nhà Cung Cấp</label>
+                                <label for="html5-text-input" class="col-md-1 col-form-label">Mã Nhà Cung Cấp</label>
                                 <div class="col-md-5">
                                     <input class="form-control" type="text" name="MaNCC" id="html5-text-input" />
                                 </div>
@@ -92,12 +91,12 @@
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <form action="/editItemNCCPage/<%=result[key].MaNCC%>" method="get">
+                                                        <form action="/editSupplierPage/<%=result[key].MaNCC%>" method="get">
                                                             <button type="submit" class="dropdown-item">
                                                                 <i class="bx bx-trash me-2">Edit</i>
                                                             </button>
                                                         </form>
-                                                        <form action="/deleteItemNCC/<%=result[key].MaNCC%>" method="post">
+                                                        <form action="/deleteSupplier /<%=result[key].MaNCC%>" method="post">
                                                             <button type="submit" class="dropdown-item">
                                                                 <i class="bx bx-trash me-2">Delete</i>
                                                             </button>
