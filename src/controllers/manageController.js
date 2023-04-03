@@ -84,7 +84,9 @@ let adjustmentPrice = async (req, res) => {
 }
 //render page linh kien
 let getManagePage = async (req, res) => {
-  res.status(200).json({ result: await data.result('Hang', 'renderData', '') }) ;
+  const limit = 20 ; 
+  const skip = ( req.params.pageIndex - 1) * limit;
+  res.status(200).json({ result: await data.result('Hang', 'renderData', '', limit, skip) }) ;
 }
 //post delete item linh kien  
 let deleteStock = async (req, res) => {

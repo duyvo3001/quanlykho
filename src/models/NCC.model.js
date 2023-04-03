@@ -1,7 +1,5 @@
-import { model } from 'mongoose';
 import connec from '../configs/connectDBmongo.js'
 import Joi from 'joi';
-const mongoosePaginate = require('mongoose-paginate-v2');
 
 const NCCcollection = 'NCC'
 const NCCSchema = Joi.object({
@@ -30,10 +28,6 @@ const createNew = async (data) => {
         console.error(error);
     }
 }
-
-NCCSchema.plugin(mongoosePaginate);
-
-module.exports = model("NCC",NCCSchema)
 
 const NCCmodel = createNew
 

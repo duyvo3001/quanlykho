@@ -1,7 +1,7 @@
 import connec from '../configs/connectDBmongo.js'
 
 // render data from table Hang 
-const result = async (kind, key, value) => {
+const result = async (kind, key, value,limit,skip) => {
     const Renderdata = async () => {
         let data = await check();
         return data
@@ -10,7 +10,8 @@ const result = async (kind, key, value) => {
     const check = async () => {
         let query = '';
         if (key === 'renderData') {
-            query = await connec.getDB().collection(kind).find({}).toArray()
+            query = await connec.getDB().collection(kind).find().limit(limit).skip(skip).toArray()
+            console.log(query)
         }
         else if (key === 'renderDatanull') {
             query = []

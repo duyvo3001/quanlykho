@@ -39,7 +39,7 @@ const initAPIRoute = async (app) => {
         
         //  ---------------manage Controller --------------- 
         //  ---------------linhkien -------------------
-        .get('/ImportStock' ,authenToken,use(manageController.getManagePage))
+        .get('/ImportStock/:limit/:pageIndex' ,authenToken,use(manageController.getManagePage))
         .post('/PostStock', authenToken, use(manageController.ImportLinhkien))
         .post('/deleteStock/:item', authenToken, use(manageController.deleteStock))
         .get('/editStockPage/:item', authenToken, use(manageController.editStockPage))
