@@ -226,7 +226,7 @@ console.log(arrData);
 let deleteBrand = async (req, res) => {
   let MaThuongHieu = req.params.item
   await connec.getDB().collection('ThuongHieu').deleteMany({ MaThuongHieu })
-  res.redirect('/HomeBrand')
+  res.status(200).json({message : 'delete sucsess'})
 }
 let editBrand = async (req, res) => {
 
