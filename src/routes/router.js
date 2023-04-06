@@ -39,19 +39,19 @@ const initAPIRoute = async (app) => {
         
         //  ---------------manage Controller --------------- 
         //  ---------------linhkien -------------------
-        .get('/ImportStock/:limit/:pageIndex' ,authenToken,use(manageController.getManagePage))
+        .get('/ImportStock/:pageIndex' ,authenToken,use(manageController.getManagePage))
         .post('/PostStock', authenToken, use(manageController.ImportLinhkien))
         .post('/deleteStock/:item', authenToken, use(manageController.deleteStock))
         .get('/editStockPage/:item', authenToken, use(manageController.editStockPage))
         .post('/editStock', authenToken, use(manageController.editStock))
         //  ---------------NCC ------------------------
-        .get('/HomeSupplier ', authenToken, use(manageController.getNCCpage))
-        .post('/PostSupplier ', authenToken, use(manageController.importNCC))
+        .get('/HomeSupplier/:pageIndex', authenToken, use(manageController.getNCCpage))
+        .post('/PostSupplier', authenToken, use(manageController.importNCC))
         .post('/deleteSupplier/:item', authenToken, use(manageController.deleteSupplier ))
         .get('/editSupplierPage/:item', authenToken, use(manageController.editSupplierPage))
         .post('/editSupplier', authenToken, use(manageController.editSupplier))
         //  ---------------ThuongHieu -----------------
-        .get('/HomeBrand', authenToken, use(manageController.getThuongHieupage))
+        .get('/HomeBrand/:pageIndex', authenToken, use(manageController.getThuongHieupage))
         .post('/PostBrand', authenToken, use(manageController.importThuongHieu))
         .post('/deleteBrand/:item', authenToken, use(manageController.deleteBrand))
         .get('/editBrand/:item', authenToken, use(manageController.editBrandPage))

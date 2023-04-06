@@ -8,6 +8,8 @@ const ThuongHieuSchema = Joi.object({
 
     TenThuongHieu: Joi.string().min(3).max(50).required(),
 
+    NgayNhap: Joi.date().required()
+
 })
 
 const validateSchema = async (data)=>{

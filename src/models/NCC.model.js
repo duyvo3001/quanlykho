@@ -12,7 +12,9 @@ const NCCSchema = Joi.object({
 
     SDT: Joi.string().min(9).max(12).required(),
 
-    Email: Joi.string().email().required()
+    Email: Joi.string().email().required() ,
+    
+    NgayNhap :  Joi.date().required()
 })
 
 const validateSchema = async (data) => {

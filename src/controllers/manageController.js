@@ -85,7 +85,7 @@ let adjustmentPrice = async (req, res) => {
 //render page linh kien
 let getManagePage = async (req, res) => {
   const pageIndex =  req.params.pageIndex || 1 ; 
-  const limit = 20 ; 
+  const limit = 10 ; 
   const skip = ( pageIndex - 1) * limit;
   res.status(200).json({ result: await data.result('Hang', 'renderData', '', limit, skip) }) ;
 }
@@ -127,24 +127,21 @@ let editStockPage = async (req, res) => {
 }
 
 //----------------------------------------- Nhà cung cấp------------------------------------
-const NCC = require('../models/NCC.model')
 let getNCCpage = async (req, res) => {
 
-  const test = await NCC.paginate()
-  console.log(test);
+  const pageIndex =  req.params.pageIndex || 1 ; 
+  const limit = 20 ; 
+  const skip = ( pageIndex - 1) * limit;
 
-  res.status(200).json({ result: await data.result('NCC', 'renderData', '') });
+  res.status(200).json({ result: await data.result('NCC', 'renderData', '',limit,skip) });
 }
 let importNCC = async (req, res) => {
-  console.log(req);
-  console.log("test");
   let { MaNCC, TenNCC, DiaChi, SDT , Email } = req.body.formData;
 
   let arrData = [MaNCC, TenNCC, DiaChi, SDT ,Email]
-  console.log(arrData);
   //check special characters
   let e = CheckSpecialCharacters(arrData)
-  if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+  if (e != false) return res.status(404).json({ error: 'chứa kí tự đặc biệt', Character: e })
 
   // check mã trùng lập 
   let querycheck = await connec.getDB().collection('NCC').find({
@@ -152,10 +149,10 @@ let importNCC = async (req, res) => {
   }).toArray()
 
   if (Object.keys(querycheck).length == 1)
-    return res.send('trùng mã nhập hàng')
+    return res.status(500).json({message : 'trùng mã nhập hàng'})
 
   let data = {
-    MaNCC, TenNCC, DiaChi, SDT , Email
+    MaNCC, TenNCC, DiaChi, SDT , Email , NgayNhap: Date.now(),
   }
   await modelNCC.NCCmodel(data)
   return res.status(200).json('message', 'oke');
@@ -193,7 +190,10 @@ let editSupplier = async (req, res) => {
 }
 //-----------------------------------------thương hiệu-----------------------------------------
 let getThuongHieupage = async (req, res) => { // render page import 
-  res.status(200).json({ result: await data.result('ThuongHieu', 'renderData', '') });
+  const pageIndex =  req.params.pageIndex || 1 ; 
+  const limit = 25 ; 
+  const skip = ( pageIndex - 1) * limit;
+  res.status(200).json({ result: await data.result('ThuongHieu', 'renderData', '', limit, skip) });
 }
 let editBrandPage = async (req, res) => {// render page edit
   let MaThuongHieu = req.params.item
@@ -218,7 +218,7 @@ console.log(arrData);
   if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã nhập hàng')
 
-  let data = { MaThuongHieu, TenThuongHieu }
+  let data = { MaThuongHieu, TenThuongHieu , NgayNhap: Date.now()}
   await modelThuongHieu.ThuongHieumodel(data)
 
   res.status(200).json('message', 'oke');

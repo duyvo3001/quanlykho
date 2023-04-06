@@ -10,8 +10,7 @@ const result = async (kind, key, value,limit,skip) => {
     const check = async () => {
         let query = '';
         if (key === 'renderData') {
-            query = await connec.getDB().collection(kind).find().limit(limit).skip(skip).toArray()
-            console.log(query)
+            query = await connec.getDB().collection(kind).find().sort({NgayNhap: -1}).limit(limit).skip(skip).toArray()
         }
         else if (key === 'renderDatanull') {
             query = []
