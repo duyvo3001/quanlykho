@@ -93,7 +93,7 @@ let getManagePage = async (req, res) => {
 let deleteStock = async (req, res) => {
   let MaLK = req.params.item
   await connec.getDB().collection('Hang').deleteMany({ MaLK })
-  res.redirect('/ImportStock')
+  res.status(200).json('message', 'oke');
 }
 //post edit item linh kien 
 let editStock = async (req, res) => {
@@ -161,7 +161,7 @@ let importNCC = async (req, res) => {
 let deleteSupplier  = async (req, res) => {
   let MaNCC = req.params.item
   await connec.getDB().collection('NCC').deleteMany({ MaNCC })
-  res.redirect('/HomeSupplier ')
+  res.status(200).json('message', 'oke');
 }
 let editSupplierPage = async (req, res) => {
 

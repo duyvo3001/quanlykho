@@ -19,7 +19,7 @@ const use = fn => (req, res, next) =>
 // mideware authentoken handler
 const authenToken = (req, res, next) => {
     const token = req.headers['authorization']
-    // console.log(req);
+    console.log(req.headers['authorization']);
     if (!token) return res.status(401).json({message:'k co token'})
 
     jwt.verify(token, process.env.ACCESS_TOKEN, (err, data) => {
