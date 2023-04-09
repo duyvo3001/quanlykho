@@ -197,10 +197,11 @@ let getThuongHieupage = async (req, res) => { // render page import
 }
 let editBrandPage = async (req, res) => {// render page edit
   let MaThuongHieu = req.params.item
-  let data = await connec.getDB().collection('ThuongHieu').find({
+
+  await connec.getDB().collection('ThuongHieu').find({
     MaThuongHieu
   }).toArray()
-  res.render('editThuongHieu.ejs', { data });
+  res.status(200).json({message :"oke"})
 }
 let importThuongHieu = async (req, res) => {
   console.log(req);
@@ -230,8 +231,9 @@ let deleteBrand = async (req, res) => {
 }
 let editBrand = async (req, res) => {
 
-  let { MaThuongHieu, TenThuongHieu } = req.body;
+  let { MaThuongHieu, TenThuongHieu } = req.body.formData;
   let arrData = [MaThuongHieu, TenThuongHieu]
+  console.log(arrData)
 
   //check special characters
   let e = CheckSpecialCharacters(arrData)
@@ -241,12 +243,12 @@ let editBrand = async (req, res) => {
   //kiểm tra trùng mã lập 
   let querycheck = connec.getDB().collection('ThuongHieu').find({ MaThuongHieu }).toArray()
   if (Object.keys(querycheck).length == 1)
-    return res.send('trùng mã sửa hàng')
+    return res.status(400).json({message :'trùng mã sửa hàng'})
 
   await connec.getDB().collection('ThuongHieu').updateOne(
     { MaThuongHieu }, { $set: { TenThuongHieu } }
   );
-  res.redirect('/HomeBrand');
+  res.status(200).json({message :"oke"})
 }
 //--------------------------------------------------------------------------
 export default
