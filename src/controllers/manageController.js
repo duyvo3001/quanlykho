@@ -3,9 +3,9 @@ import modelHang from '../models/Hang.model'
 import modelNCC from '../models/NCC.model'
 import modelThuongHieu from '../models/ThuongHieu.model'
 import { checkfunc } from '../services/checkData'
-import data from "../services/renderdataHang";  
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate-v2');
+import mongoose from "mongoose"
+import data from "../services/renderdataHang";
+import { UpdateItemBrandServices, UpdateItemStockServices, UpdateItemSupplierServices } from '../services/UpdateItem.js'
 //check special characters
 const CheckSpecialCharacters = (arrData) => {
   let checkArr = checkfunc(arrData)
@@ -84,61 +84,58 @@ let adjustmentPrice = async (req, res) => {
 }
 //render page linh kien
 let getManagePage = async (req, res) => {
-  const pageIndex =  req.params.pageIndex || 1 ; 
-  const limit = 10 ; 
-  const skip = ( pageIndex - 1) * limit;
-  res.status(200).json({ result: await data.result('Hang', 'renderData', '', limit, skip) }) ;
+  const pageIndex = req.params.pageIndex || 1;
+  const limit = 16;
+  const skip = (pageIndex - 1) * limit;
+  return res.status(200).json({ result: await data.result('Hang', 'renderData', '', limit, skip) });
 }
 //post delete item linh kien  
 let deleteStock = async (req, res) => {
   let MaLK = req.params.item
   await connec.getDB().collection('Hang').deleteMany({ MaLK })
-  res.status(200).json('message', 'oke');
+  return res.status(200).json('message', 'oke');
 }
 //post edit item linh kien 
 let editStock = async (req, res) => {
 
-  let { MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body;
+  let { MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang, _id } = req.body.formData;
   let arrData = [MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
 
+  let updateItemStockServices = new UpdateItemStockServices()
+  let updateItem = updateItemStockServices.getTransport({ MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang })
+  let fileId = new mongoose.Types.ObjectId(_id);
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
-    return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+    return res.status(404).json({ error: 'chứa kí tự đặc biệt', Character: e })
 
   //kiểm tra trùng mã lập 
   let querycheck = connec.getDB().collection('Hang').find({ MaLK }).toArray()
   if (Object.keys(querycheck).length == 1)
-    return res.send('trùng mã sửa hàng')
+    return res.status(404).json({ message: 'trùng mã sửa hàng' })
 
   await connec.getDB().collection('Hang').updateOne(
-    { MaLK }, { $set: { TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } }
+    { _id: fileId }, {
+    $set: updateItem
+  }
   );
 
-  res.redirect('/ImportStock')
-}
-//page edit item Linh kien
-let editStockPage = async (req, res) => {
-  let MaLK = req.params.item
-  let data = await connec.getDB().collection('Hang').find({
-    MaLK
-  }).toArray()
-  res.render('editLinhKien.ejs', { data })
+  return res.status(200).json({ message: "oke" })
 }
 
 //----------------------------------------- Nhà cung cấp------------------------------------
 let getNCCpage = async (req, res) => {
 
-  const pageIndex =  req.params.pageIndex || 1 ; 
-  const limit = 20 ; 
-  const skip = ( pageIndex - 1) * limit;
+  const pageIndex = req.params.pageIndex || 1;
+  const limit = 20;
+  const skip = (pageIndex - 1) * limit;
 
-  res.status(200).json({ result: await data.result('NCC', 'renderData', '',limit,skip) });
+  res.status(200).json({ result: await data.result('NCC', 'renderData', '', limit, skip) });
 }
 let importNCC = async (req, res) => {
-  let { MaNCC, TenNCC, DiaChi, SDT , Email } = req.body.formData;
+  let { MaNCC, TenNCC, DiaChi, SDT, Email } = req.body.formData;
 
-  let arrData = [MaNCC, TenNCC, DiaChi, SDT ,Email]
+  let arrData = [MaNCC, TenNCC, DiaChi, SDT, Email]
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false) return res.status(404).json({ error: 'chứa kí tự đặc biệt', Character: e })
@@ -149,66 +146,58 @@ let importNCC = async (req, res) => {
   }).toArray()
 
   if (Object.keys(querycheck).length == 1)
-    return res.status(500).json({message : 'trùng mã nhập hàng'})
+    return res.status(500).json({ message: 'trùng mã nhập hàng' })
 
   let data = {
-    MaNCC, TenNCC, DiaChi, SDT , Email , NgayNhap: Date.now(),
+    MaNCC, TenNCC, DiaChi, SDT, Email, NgayNhap: Date.now(),
   }
   await modelNCC.NCCmodel(data)
   return res.status(200).json('message', 'oke');
 }
 
-let deleteSupplier  = async (req, res) => {
+let deleteSupplier = async (req, res) => {
   let MaNCC = req.params.item
   await connec.getDB().collection('NCC').deleteMany({ MaNCC })
   res.status(200).json('message', 'oke');
 }
-let editSupplierPage = async (req, res) => {
-
-  let MaNCC = req.params.item
-  let data = await connec.getDB().collection('NCC').find({
-    MaNCC
-  }).toArray()
-  res.render('editNCC.ejs', { data })
-}
 let editSupplier = async (req, res) => {
-  let { MaNCC, TenNCC, DiaChi, SDT } = req.body;
+  let { MaNCC, TenNCC, DiaChi, SDT, _id } = req.body.formData;
   let arrData = [MaNCC, TenNCC, DiaChi, SDT]
+
+  let updateItemSupplierService = new UpdateItemSupplierServices()
+  let updateItem = updateItemSupplierService.getTransport({ MaNCC, TenNCC, DiaChi, SDT })
+  let fileId = new mongoose.Types.ObjectId(_id);
+
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
-    return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+    return res.status(404).json({ error: 'chứa kí tự đặc biệt', Character: e })
 
   //kiểm tra trùng mã lập 
   let querycheck = connec.getDB().collection('NCC').find({ MaNCC }).toArray()
   if (Object.keys(querycheck).length == 1)
-    return res.send('trùng mã Nhà cung cấp')
+    return res.status(404).json({ message: 'trùng mã sửa hàng' })
   await connec.getDB().collection('NCC').updateOne(
-    { MaNCC }, { $set: { TenNCC, DiaChi, SDT } }
+    { _id: fileId }, {
+    $set: updateItem
+  }
   );
-  res.redirect('/HomeSupplier ');
+  res.status(200).json({ message: "oke" })
+
 }
 //-----------------------------------------thương hiệu-----------------------------------------
 let getThuongHieupage = async (req, res) => { // render page import 
-  const pageIndex =  req.params.pageIndex || 1 ; 
-  const limit = 25 ; 
-  const skip = ( pageIndex - 1) * limit;
+  const pageIndex = req.params.pageIndex || 1;
+  const limit = 25;
+  const skip = (pageIndex - 1) * limit;
   res.status(200).json({ result: await data.result('ThuongHieu', 'renderData', '', limit, skip) });
 }
-let editBrandPage = async (req, res) => {// render page edit
-  let MaThuongHieu = req.params.item
-
-  await connec.getDB().collection('ThuongHieu').find({
-    MaThuongHieu
-  }).toArray()
-  res.status(200).json({message :"oke"})
-}
 let importThuongHieu = async (req, res) => {
-  console.log(req);
   let { MaThuongHieu, TenThuongHieu } = req.body.formData;
+
   //check special characters
   let arrData = [MaThuongHieu, TenThuongHieu]
-console.log(arrData);
+  console.log(arrData);
   let e = CheckSpecialCharacters(arrData)
   if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
 
@@ -219,7 +208,7 @@ console.log(arrData);
   if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã nhập hàng')
 
-  let data = { MaThuongHieu, TenThuongHieu , NgayNhap: Date.now()}
+  let data = { MaThuongHieu, TenThuongHieu, NgayNhap: Date.now() }
   await modelThuongHieu.ThuongHieumodel(data)
 
   res.status(200).json('message', 'oke');
@@ -227,28 +216,36 @@ console.log(arrData);
 let deleteBrand = async (req, res) => {
   let MaThuongHieu = req.params.item
   await connec.getDB().collection('ThuongHieu').deleteMany({ MaThuongHieu })
-  res.status(200).json({message : 'delete sucsess'})
+  res.status(200).json({ message: 'delete sucsess' })
 }
 let editBrand = async (req, res) => {
+  let { MaThuongHieu, TenThuongHieu, _id } = req.body.formData;
 
-  let { MaThuongHieu, TenThuongHieu } = req.body.formData;
+  let updateItemBrandServices = new UpdateItemBrandServices()
+  let updateItem = updateItemBrandServices.getTransport({ MaThuongHieu, TenThuongHieu })
+
+  let fileId = new mongoose.Types.ObjectId(_id);
+
   let arrData = [MaThuongHieu, TenThuongHieu]
-  console.log(arrData)
 
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
-    return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+    return res.status(404).json({ error: 'chứa kí tự đặc biệt', Character: e })
 
   //kiểm tra trùng mã lập 
   let querycheck = connec.getDB().collection('ThuongHieu').find({ MaThuongHieu }).toArray()
   if (Object.keys(querycheck).length == 1)
-    return res.status(400).json({message :'trùng mã sửa hàng'})
+    return res.status(404).json({ message: 'trùng mã sửa hàng' })
 
+  // query update
   await connec.getDB().collection('ThuongHieu').updateOne(
-    { MaThuongHieu }, { $set: { TenThuongHieu } }
-  );
-  res.status(200).json({message :"oke"})
+    { _id: fileId }, {
+    $set: updateItem
+  }
+  )
+
+  res.status(200).json({ message: "oke" })
 }
 //--------------------------------------------------------------------------
 export default
@@ -259,15 +256,12 @@ export default
     ImportLinhkien,
     editStock,
     deleteStock,
-    editStockPage,
     getNCCpage,
     importNCC,
-    deleteSupplier ,
+    deleteSupplier,
     editSupplier,
-    editSupplierPage,
     getThuongHieupage,
     importThuongHieu,
     deleteBrand,
-    editBrandPage,
-    editBrand
+    editBrand 
   };      

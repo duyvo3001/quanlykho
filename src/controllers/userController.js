@@ -1,54 +1,53 @@
 import jwt from 'jsonwebtoken';
 import connec from '../configs/connectDBmongo.js'
 import model from '../models/NhanVien.model.js'
+import data from "../services/renderdataHang";
 
 import { _pass, test_pass } from '../services/hassPass';
 
-let getLoginPage = (req, res) => {
-  res.render('login.ejs', { layout: false });
+let getStaffPage = async (req, res) => {
+  const pageIndex = req.params.pageIndex || 1;
+  const limit = 16;
+  const skip = (pageIndex - 1) * limit;
+  res.status(200).json({ result: await data.result('NhanVien', 'renderData', '', limit, skip) });
 }
 
 let createUser = async (req, res) => {
-  let { hoten, ngaysinh, sex, user_nv, pass_nv, repass_nv, phone, email, address, accessrights } = req.body;
-  if(hoten.length < 5) 
-    return res.send('hoten must be at least 5');
-  let _Pass = _pass(pass_nv.trim(), repass_nv.trim());
+  let { MaNV,TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, accessrights } = req.body.formData;
+  console.log( req.body.formData )
+  if(TenNV?.length < 5) 
+    return res.status(404).json({message :'hoten must be at least 5'});
+  let _Pass = _pass(pass_nv, repass_nv);
 
-  const result = await connec.getDB().collection('NhanVien').find({
-    USER_NV: user_nv
-  }).toArray()
+  const result = await connec.getDB().collection('NhanVien').find({USER_NV}).toArray()
 
   //
   if (Object.keys(result).length == 1) { // tạo 1 function riêng để check user
-    return res.redirect("/");
+    return res.status(404).json({message: "da co user"})
   }
   else {
     if (pass_nv === repass_nv) {
-      const dataUser = await connec.getDB().collection('NhanVien').count()
-
-      let count = dataUser + 1;
-
       let data = {
-        MaNV: String(count),
-        TenNV: hoten,
-        GioiTinh: +sex,
-        DiaChi: address,
-        NgaySinh: ngaysinh,
-        USER_NV: user_nv,
+        MaNV: MaNV,
+        TenNV: TenNV,
+        GioiTinh: +GioiTinh,
+        DiaChi: DiaChi,
+        NgaySinh: Date.now(),
+        USER_NV: USER_NV,
         PASSWORD: _Pass.createpass.hash,
-        SDT: phone,
-        Email: email,
+        SDT: SDT,
+        Email: Email,
         NgayTao: Date.now(),
         AccessRight: accessrights,
       }
       await model.NhanVienmodel(data)
-      res.cookie("user_id", count);
-      return res.redirect("/registerstaff");
+
+      return res.status(201).json({message:'created successfully'});
 
     }
     else console.log("test failed ");
 
-    return res.redirect("/");
+    return res.status(400).json({message:'failed'});
   }
 }
 
@@ -97,5 +96,8 @@ let SignUser = async (req, res) => {
 let register = (req, res) => {
   res.render('register.ejs');
 }
+let updateUser =(req, res) => { 
+  let { MaNV,TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, accessrights } = req.body.formData;
 
-export default { getLoginPage, createUser, SignUser, register };  
+}
+export default { getStaffPage, createUser, SignUser, register };  

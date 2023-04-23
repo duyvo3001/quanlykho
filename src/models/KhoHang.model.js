@@ -12,6 +12,8 @@ const KhoHangSchema = Joi.object({
     
     SDT: Joi.string().min(5).max(12).required(),
 
+    NgayTao: Joi.date().required()
+
 })
 
 const validateSchema = async (data)=>{

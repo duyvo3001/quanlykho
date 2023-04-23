@@ -8,6 +8,7 @@ import reportController from '../controllers/reportController'
 import SearchController from '../controllers/SearchController';
 import listViewController from '../controllers/listViewController';
 import mongoController from '../controllers/mongoController';
+import CustomerController from '../controllers/CustomerController';
 const dotenv = require('dotenv');
 dotenv.config();
 let router = express.Router();
@@ -19,7 +20,7 @@ const use = fn => (req, res, next) =>
 // mideware authentoken handler
 const authenToken = (req, res, next) => {
     const token = req.headers['authorization']
-    console.log(req.headers['authorization']);
+
     if (!token) return res.status(401).json({message:'k co token'})
 
     jwt.verify(token, process.env.ACCESS_TOKEN, (err, data) => {
@@ -29,8 +30,13 @@ const authenToken = (req, res, next) => {
 }
 const initAPIRoute = async (app) => {
     router
+        //-----------------Customer Controller----------------
+        .get('/CustomerPage/:pageIndex',authenToken,use(CustomerController.CustomerPage))
+        .post('/ImportCustomer',authenToken,use(CustomerController.importCustomer))
+        .patch('/UpdateCustomer',authenToken,use(CustomerController.UpdateCustomer))
+        .post('/DeleteCustomer',authenToken,use(CustomerController.DeleteCustomer))
         //  ---------------login Controller--------------- 
-        .get('/', use(userController.getLoginPage))
+        .get('/StaffPage/:pageIndex', authenToken,use(userController.getStaffPage))
         .get('/registerstaff',authenToken, use(userController.register))
         .post('/createstaff',authenToken, use(userController.createUser))
         .post('/signin', use(userController.SignUser))
@@ -42,20 +48,18 @@ const initAPIRoute = async (app) => {
         .get('/ImportStock/:pageIndex' ,authenToken,use(manageController.getManagePage))
         .post('/PostStock', authenToken, use(manageController.ImportLinhkien))
         .post('/deleteStock/:item', authenToken, use(manageController.deleteStock))
-        .get('/editStockPage/:item', authenToken, use(manageController.editStockPage))
-        .post('/editStock', authenToken, use(manageController.editStock))
+        .patch('/editStock', authenToken, use(manageController.editStock))
         //  ---------------NCC ------------------------
         .get('/HomeSupplier/:pageIndex', authenToken, use(manageController.getNCCpage))
         .post('/PostSupplier', authenToken, use(manageController.importNCC))
         .post('/deleteSupplier/:item', authenToken, use(manageController.deleteSupplier ))
         .get('/editSupplierPage/:item', authenToken, use(manageController.editSupplierPage))
-        .post('/editSupplier', authenToken, use(manageController.editSupplier))
+        .patch('/editSupplier', authenToken, use(manageController.editSupplier))
         //  ---------------ThuongHieu -----------------
         .get('/HomeBrand/:pageIndex', authenToken, use(manageController.getThuongHieupage))
         .post('/PostBrand', authenToken, use(manageController.importThuongHieu))
         .post('/deleteBrand/:item', authenToken, use(manageController.deleteBrand))
-        .get('/editBrand/:item', authenToken, use(manageController.editBrandPage))
-        .post('/editBrand', authenToken, use(manageController.editBrand))
+        .patch('/editBrand', authenToken, use(manageController.editBrand))
         //  ---------------Dieu Chinh Gia Von -----------------  
         .get('/adjustmentPricePage', authenToken, use(manageController.adjustmentPricePage))
         .post('/adjustmentPrice', authenToken, use(manageController.adjustmentPrice))

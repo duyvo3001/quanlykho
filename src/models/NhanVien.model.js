@@ -8,9 +8,9 @@ const NhanVienSchema = Joi.object({
 
     TenNV: Joi.string().min(3).max(50).required(),
 
-    GioiTinh: Joi.boolean().valid(0).required(),
+    GioiTinh: Joi.number().required(),
 
-    DiaChi: Joi.string().min(3).max(50).required(),
+    DiaChi: Joi.string().min(1).max(50).required(),
 
     NgaySinh: Joi.date().required(),
 
@@ -24,7 +24,12 @@ const NhanVienSchema = Joi.object({
 
     NgayTao: Joi.date().required(),
 
-    AccessRight : Joi.string().min(3).max(50).required()
+    AccessRight : {
+        create: Joi.string().min(3).max(10),
+        read: Joi.string().min(3).max(10),
+        update: Joi.string().min(3).max(10),
+        Delete: Joi.string().min(3).max(10)
+    }
 })
 
 const validateSchema = async (data)=>{
