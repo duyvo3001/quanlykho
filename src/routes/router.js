@@ -64,7 +64,8 @@ const initAPIRoute = async (app) => {
         .get('/adjustmentPricePage', authenToken, use(manageController.adjustmentPricePage))
         .post('/adjustmentPrice', authenToken, use(manageController.adjustmentPrice))
             //  ---------------export Controller --------------- 
-        .get('/exportPage', authenToken, use(exportController.getExportPage))
+        .post('/SearchStockExport', authenToken, use(exportController.SearchStock))
+        .get('/exportPage', use(exportController.getExportPage))
         .get('/getPageExportfile', authenToken, use(exportController.getPageExportfile))
         .post('/exportfile', authenToken, use(exportController.Exportfile))
         .post('/getID', authenToken, use(exportController.getID))

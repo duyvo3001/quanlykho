@@ -1,7 +1,14 @@
 import data from "../services/renderdataHang";
 import connec from '../configs/connectDBmongo.js'
 import { checkfunc } from '../services/checkData';
-
+const searchfunc = (search) => {
+    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    if (format.test(search)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 //check special characters
 const CheckSpecialCharacters = (arrData) => {
     let checkArr = checkfunc(arrData)
@@ -12,25 +19,39 @@ const CheckSpecialCharacters = (arrData) => {
 const CheckDataHang = () => {
 
 }
+const SearchStock = async (req, res) => {
+    let { search } = req.body.formData;
+
+    if (searchfunc(search)) {
+        return res.status(500).json({ message: 'chứa kí tự đặt biệt' })
+    }
+
+    let datarender = await data.result('Hang', '', search, '', '')
+
+    if (datarender == null) {
+        return res.status(500).json({ message: 'rong!' })
+    }
+    return res.status(200).json({ result: datarender })
+}
 //
 let getExportPage = async (req, res) => {
     let arrayResult = [];
     let objResult = [];
     let lengthSessions = Object.keys(req.session).length;
 
-    if (lengthSessions == 1) {
-        res.render('exportpage.ejs', { result: await data.result('Hang', 'renderDatanull', '') })
-    }
-    // kiem tra bao nhieu session
-    else {
-        for (let i = 0; i < lengthSessions; i++) {
-            objResult.push(await data.result('Hang', 'renderdataExport', req.session[`id${i + 1}`]?.['MaLK']));
-            if (objResult[i][0] != undefined)
-                arrayResult.push(objResult[i][0])
-        }
+    return res.render('exportpage.ejs', { result: await data.result('Hang', 'renderDatanull', '') })
+    // if (lengthSessions == 1) {
+    // }
+    //  kiem tra bao nhieu session
+    // else {
+    //     for (let i = 0; i < lengthSessions; i++) {
+    //         objResult.push(await data.result('Hang', 'renderdataExport', req.session[`id${i + 1}`]?.['MaLK']));
+    //         if (objResult[i][0] != undefined)
+    //             arrayResult.push(objResult[i][0])
+    //     }
 
-        res.render('exportpage.ejs', { result: arrayResult })
-    }
+    //     res.render('exportpage.ejs', { result: arrayResult })
+    // }
 }
 
 let getID = async (req, res) => {
@@ -63,7 +84,7 @@ let getID = async (req, res) => {
 
     if (testHang.trim() == 'xuathang')
         return res.send('không thể nhập hàng đã xuất')
-    console.log('check ::::::::::::',testHang)
+    console.log('check ::::::::::::', testHang)
     if (testHang) {
         req.session[`id${lengthSessions}`] = {
             MaLK, ThuongHieu
@@ -92,15 +113,14 @@ let getPageExportfile = async (req, res) => { // RENDER PAGE DOWLOAD BILL
 }
 // nhap du lieu vao data xuat hang
 let Exportfile = async (req, res) => {
+    let MaLK = req.body.keyMaLK 
 
-    let lengthSessions = Object.keys(req.session).length
-    for (let i = 0; i <= lengthSessions; i++) {
-        await connec.getDB().collection('Hang').updateOne(
-            { MaLK: req.session[`id${i + 1}`]?.['MaLK'] }, { $set: { TinhTrangHang: 'xuathang' } }
-        );
-
-    }
-    req.session.destroy();
+    MaLK?.map((key) => (
+        connec.getDB().collection('Hang').updateOne(
+            { MaLK: key }, { $set: { TinhTrangHang: 'xuathang' } }
+        )
+    ))
+    return res.status(200).json({message : "export success"})
 }
 
-export default { getExportPage, getID, getPageExportfile, Exportfile };      
+export default { getExportPage, getID, getPageExportfile, Exportfile, SearchStock };      
