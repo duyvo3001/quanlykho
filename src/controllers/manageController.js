@@ -223,7 +223,7 @@ let editBrand = async (req, res) => {
 
   let updateItemBrandServices = new UpdateItemBrandServices()
   let updateItem = updateItemBrandServices.getTransport({ MaThuongHieu, TenThuongHieu })
-
+  console.log(updateItem)
   let fileId = new mongoose.Types.ObjectId(_id);
 
   let arrData = [MaThuongHieu, TenThuongHieu]

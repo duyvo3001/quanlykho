@@ -1,52 +1,78 @@
 class Brand {
     constructor({ MaThuongHieu, TenThuongHieu }) {
-        this.MaThuongHieu = MaThuongHieu || null
-        this.TenThuongHieu = TenThuongHieu || null
+        if(MaThuongHieu)
+            this.MaThuongHieu = MaThuongHieu 
+        if(TenThuongHieu)
+            this.TenThuongHieu = TenThuongHieu 
     }
 }
 class Stock {
     constructor({ MaLK, TenLK, Donvi, Soluong, MaThuongHieu, MaNCC, Color, MaKho, GiaBanLe, TinhTrangHang }) {
-        this.MaLK = MaLK || null
-        this.TenLK = TenLK || null
-        this.Donvi = Donvi || null
-        this.Soluong = Soluong || null
-        this.MaThuongHieu = MaThuongHieu || null
-        this.MaNCC = MaNCC || null
-        this.Color = Color || null
-        this.MaKho = MaKho || null
-        this.GiaBanLe = GiaBanLe || null
-        this.TinhTrangHang = TinhTrangHang || null
+        if(MaLK)
+            this.MaLK = MaLK 
+        if(TenLK)
+            this.TenLK = TenLK 
+        if(Donvi)
+            this.Donvi = Donvi 
+        if(Soluong)
+            this.Soluong = Soluong 
+        if(MaThuongHieu)
+            this.MaThuongHieu = MaThuongHieu 
+        if(MaNCC)
+            this.MaNCC = MaNCC 
+        if(Color)
+            this.Color = Color 
+        if(MaKho)
+            this.MaKho = MaKho 
+        if(GiaBanLe)
+            this.GiaBanLe = GiaBanLe 
+        if(TinhTrangHang)
+            this.TinhTrangHang = TinhTrangHang 
     }
 }
 class Supplier {
     constructor({ MaNCC, TenNCC, DiaChi, SDT, Email }) {
-        this.MaNCC = MaNCC || null
-        this.TenNCC = TenTenNCCLK || null
-        this.DiaChi = DiaChi || null
-        this.SDT = SDT || null
-        this.Email = Email || null
+        if(MaNCC)this.MaNCC = MaNCC 
+        if(TenNCC)this.TenNCC = TenNCC 
+        if(DiaChi)this.DiaChi = DiaChi 
+        if(SDT)this.SDT = SDT 
+        if(Email)this.Email = Email 
     }
 }
 class Customer {
     constructor({ IDCustomer, NameCustomer, Phone, Email }) {
-            this.IDCustomer = IDCustomer|| null
-            this.NameCustomer = NameCustomer|| null
-            this.Phone = Phone|| null
-            this.Email = Email|| null
+        if(IDCustomer)
+            this.IDCustomer = IDCustomer
+        if(NameCustomer)   
+            this.NameCustomer = NameCustomer
+        if(Phone)
+            this.Phone = Phone
+        if(Email)
+            this.Email = Email
     }
 }
 class User {
     constructor({ MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, SDT, Email, DiaChi, accessrights }) {
-            this.MaNV = MaNV|| null
-            this.TenNV = TenNV|| null
-            this.NgaySinh = NgaySinh|| null
-            this.GioiTinh = GioiTinh|| null
-            this.USER_NV = USER_NV|| null
-            this.pass_nv = pass_nv|| null
-            this.SDT = SDT|| null
-            this.Email = Email|| null
-            this.DiaChi = DiaChi|| null
-            this.accessrights = accessrights|| null
+        if(MaNV)
+            this.MaNV = MaNV
+        if(TenNV)
+            this.TenNV = TenNV
+        if(NgaySinh)
+            this.NgaySinh = NgaySinh
+        if(GioiTinh)
+            this.GioiTinh = GioiTinh
+        if(USER_NV)
+            this.USER_NV = USER_NV
+        if(pass_nv)
+            this.pass_nv = pass_nv
+        if(SDT)
+            this.SDT = SDT
+        if(Email)
+            this.Email = Email
+        if(DiaChi)
+            this.DiaChi = DiaChi
+        if(accessrights)
+            this.accessrights = accessrights
     }
 }
 class ServicesUpdate {

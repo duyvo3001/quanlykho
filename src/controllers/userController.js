@@ -13,7 +13,7 @@ let getStaffPage = async (req, res) => {
 }
 
 let createUser = async (req, res) => {
-  let { MaNV,TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, accessrights } = req.body.formData;
+  let { MaNV,TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, AccessRight } = req.body.formData;
   console.log( req.body.formData )
   if(TenNV?.length < 5) 
     return res.status(404).json({message :'hoten must be at least 5'});
@@ -38,7 +38,7 @@ let createUser = async (req, res) => {
         SDT: SDT,
         Email: Email,
         NgayTao: Date.now(),
-        AccessRight: accessrights,
+        AccessRight: AccessRight,
       }
       await model.NhanVienmodel(data)
 

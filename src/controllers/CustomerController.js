@@ -1,5 +1,6 @@
 import modelCustomer from "../models/Customer.model";
 import { checkfunc } from '../services/checkData'
+import mongoose from "mongoose"
 import connec from '../configs/connectDBmongo.js'
 import data from "../services/renderdataHang";
 import { UpdateCustomerServices } from "../services/UpdateItem"
@@ -51,12 +52,13 @@ let importCustomer = async (req, res) => {
 
 let UpdateCustomer = async (req, res) => {
 
-    let { IDCustomer, NameCustomer, Phone, Email } = req.body.formData
-
+    let { _id ,IDCustomer, NameCustomer, Phone, Email } = req.body.formData
+    
     let arrData = [IDCustomer, NameCustomer, Phone, Email]
-
-    let updateCustomerkServices = new UpdateCustomerServices()
-    let updateCus = updateCustomerkServices.getTransport({ IDCustomer, NameCustomer, Phone, Email })
+    console.log(arrData);
+    let updateCustomerServices = new UpdateCustomerServices()
+    let updateCus = updateCustomerServices.getTransport({ IDCustomer, NameCustomer, Phone, Email })
+    console.log(updateCus)
     let fileId = new mongoose.Types.ObjectId(_id);
 
     //check special characters
@@ -66,7 +68,7 @@ let UpdateCustomer = async (req, res) => {
     //kiểm tra trùng mã lập 
     let querycheck = connec.getDB().collection('Customer').find({ IDCustomer }).toArray()
     if (Object.keys(querycheck).length == 1)
-        return res.status(404).json({ message: 'trùng mã sửa hàng' })
+        return res.status(404).json({ message: 'trùng ID' })
 
     await connec.getDB().collection('Customer').updateOne(
         { _id: fileId }, {
