@@ -35,12 +35,12 @@ const initAPIRoute = async (app) => {
         .get('/WareHousePage/:pageIndex', authenToken, use(WareHouseController.getWarehousePage))
         .post('/importWarehouse', authenToken, use(WareHouseController.importWarehouse))
         .patch('/UpdateWarehouse', authenToken, use(WareHouseController.editWarehouse))
-        .post('/deleteWarehouse', authenToken, use(WareHouseController.deleteWarehouse))
+        .post('/deleteWarehouse/:item', authenToken, use(WareHouseController.deleteWarehouse))
         //-----------------Customer Controller----------------
         .get('/CustomerPage/:pageIndex', authenToken, use(CustomerController.CustomerPage))
         .post('/ImportCustomer', authenToken, use(CustomerController.importCustomer))
         .patch('/UpdateCustomer', authenToken, use(CustomerController.UpdateCustomer))
-        .post('/DeleteCustomer', authenToken, use(CustomerController.DeleteCustomer))
+        .post('/DeleteCustomer/:item', authenToken, use(CustomerController.DeleteCustomer))
         //  ---------------login Controller--------------- 
         .get('/StaffPage/:pageIndex', authenToken, use(userController.getStaffPage))
         .get('/registerstaff', authenToken, use(userController.register))
