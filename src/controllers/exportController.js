@@ -21,13 +21,13 @@ const CheckDataHang = () => {
 }
 const SearchStock = async (req, res) => {
     let { search } = req.body.formData;
-
+    console.log(search);
     if (searchfunc(search)) {
         return res.status(500).json({ message: 'chứa kí tự đặt biệt' })
     }
 
     let datarender = await data.result('Hang', '', search, '', '')
-
+    console.log(datarender)
     if (datarender == null) {
         return res.status(500).json({ message: 'rong!' })
     }
