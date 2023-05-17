@@ -20,17 +20,19 @@ const CheckDataHang = () => {
 
 }
 const SearchStock = async (req, res) => {
-    let { search } = req.body.formData;
-    console.log(search);
-    if (searchfunc(search)) {
-        return res.status(500).json({ message: 'chứa kí tự đặt biệt' })
-    }
+    const datarender = await connec.getDB().collection('Hang').find({}).toArray()
+    console.log(datarender);
+    // let { search } = req.body.formData;
+    // console.log(search);
+    // if (searchfunc(search)) {
+    //     return res.status(500).json({ message: 'chứa kí tự đặt biệt' })
+    // }
 
-    let datarender = await data.result('Hang', '', search, '', '')
-    console.log(datarender)
-    if (datarender == null) {
-        return res.status(500).json({ message: 'rong!' })
-    }
+    // let datarender = await data.result('Hang', '', search, '', '')
+    // console.log(datarender)
+    // if (datarender == null) {
+    //     return res.status(500).json({ message: 'rong!' })
+    // }
     return res.status(200).json({ result: datarender })
 }
 //
