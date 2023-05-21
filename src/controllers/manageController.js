@@ -194,7 +194,7 @@ let getThuongHieupage = async (req, res) => { // render page import
 }
 let importThuongHieu = async (req, res) => {
   let { MaThuongHieu, TenThuongHieu } = req.body.formData;
-
+  console.log( req.body.formData)
   //check special characters
   let arrData = [MaThuongHieu, TenThuongHieu]
   console.log(arrData);

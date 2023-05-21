@@ -65,7 +65,7 @@ let SignUser = async (req, res) => {
     return res.status(200).json({message :"tài khoản hoặc mật khẩu để trống"})
 
   const result = await connec.getDB().collection('NhanVien').find({
-    USER_NV: user_nv.trim()
+    USER_NV: user_nv?.trim()
   }).toArray()
 
   if ( Object.keys(result).length == 0)

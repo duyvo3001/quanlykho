@@ -16,10 +16,9 @@ const SearchStock = async (req, res) => {
 
   let datarender = await data.result('Hang', '', search, '', '')
 
-  if(datarender == null) {
+  if (datarender == null) {
     return res.status(500).json({ message: 'rong!' })
   }
-  console.log(datarender)
 
   return res.status(200).json({ result: datarender })
 }
@@ -35,4 +34,5 @@ const SearchBrand = async (req, res) => {
   searchfunc(search) ? res.send('chứa kí tự đặt biệt') :
     res.render('importThuongHieu.ejs', { result: await data.result('ThuongHieu', '', search) })
 }
-export default { SearchStock, SearchSupplier, SearchBrand }
+
+export default { SearchStock, SearchSupplier, SearchBrand  }

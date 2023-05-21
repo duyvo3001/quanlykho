@@ -71,6 +71,7 @@ const initAPIRoute = async (app) => {
         .post('/adjustmentPrice', authenToken, use(manageController.adjustmentPrice))
         //  ---------------export Controller --------------- 
         .get('/SearchStockExport', authenToken, use(exportController.SearchStock))
+        .get('/SearchCustomer', authenToken, use(exportController.SearchCustomer))
         .get('/exportPage', use(exportController.getExportPage))
         .get('/getPageExportfile', authenToken, use(exportController.getPageExportfile))
         .post('/exportfile', authenToken, use(exportController.Exportfile))
