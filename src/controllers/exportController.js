@@ -25,8 +25,7 @@ const SearchStock = async (req, res) => {
 }
 //
 const SearchCustomer = async (req, res) => {
-    const datarender = await connec.getDB().collection('Customer').find({}).toArray()
-    console.log(datarender);
+    const datarender = await connec.getDB().collection('Customer').find({}).toArray()   
     return res.status(200).json({ result: datarender })
   }
 let getExportPage = async (req, res) => {
@@ -100,7 +99,6 @@ let getPageExportfile = async (req, res) => { // RENDER PAGE DOWLOAD BILL
             if (objResult[i][0] != undefined)
                 arrayResult.push(objResult[i][0])
         }
-        console.log(arrayResult);
         return res.render('convertfileExport', { layout: false, result: arrayResult })
     }
     res.send('chưa nhập hàng');
