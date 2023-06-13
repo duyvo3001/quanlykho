@@ -10,6 +10,7 @@ import listViewController from '../controllers/listViewController';
 import mongoController from '../controllers/mongoController';
 import CustomerController from '../controllers/CustomerController';
 import WareHouseController from '../controllers/WareHouseController';
+import PaidProductController from '../controllers/PaidProductController';
 const dotenv = require('dotenv');
 dotenv.config();
 let router = express.Router();
@@ -48,7 +49,8 @@ const initAPIRoute = async (app) => {
         .post('/signin', use(userController.SignUser))
         //  ---------------BARCODE Controller --------------- 
         .get('/barcodePage/:item?', authenToken, use(barcode.barcodePage))
-
+        // ----------------Paid Order----------------------------------
+        .post('/PaidOrder', authenToken, use(PaidProductController.paidProduct))
         //  ---------------manage Controller --------------- 
         //  ---------------linhkien -------------------
         .get('/ImportStock/:pageIndex', authenToken, use(manageController.getManagePage))
