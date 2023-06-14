@@ -3,18 +3,14 @@ import Joi from 'joi';
 
 const HoaDoncollection = 'HoaDon'
 const HoaDonSchema = Joi.object({
-    MaHD: Joi.string().alphanum().min(3).max(50).required(),
 
-    MaLK: Joi.object(),
-
-    SoLuong: Joi.number().required(),
-
+    LinhKien: {
+        MaLK: Joi.string().min(3).max(10).required(),
+        SoLuong: Joi.number().required(),
+    },
     Disount: Joi.number().required(),
-
     MaKH: Joi.string().min(3).max(10).required(),
-
     MaNV: Joi.string().min(3).max(50).required(),
-
     NgayLapHD: Joi.date().default(Date.now)
 })
 

@@ -194,9 +194,9 @@ let getThuongHieupage = async (req, res) => { // render page import
 }
 let importThuongHieu = async (req, res) => {
   let { MaThuongHieu, TenThuongHieu } = req.body.formData;
-  console.log( req.body.formData)
+  let TenThuongHieu1 = "hello"
   //check special characters
-  let arrData = [MaThuongHieu, TenThuongHieu]
+  let arrData = [MaThuongHieu, TenThuongHieu ,TenThuongHieu1]
   console.log(arrData);
   let e = CheckSpecialCharacters(arrData)
   if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
@@ -208,7 +208,7 @@ let importThuongHieu = async (req, res) => {
   if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã nhập hàng')
 
-  let data = { MaThuongHieu, TenThuongHieu, NgayNhap: Date.now() }
+  let data = { MaThuongHieu, TenThuongHieu, TenThuongHieu1 , NgayNhap: Date.now() }
   await modelThuongHieu.ThuongHieumodel(data)
 
   res.status(200).json('message', 'oke');

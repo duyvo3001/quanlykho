@@ -3,17 +3,24 @@ import modelHoaDon from '../models/HoaDon.model.js';
 
 const paidProduct = async (req, res) => {
     let { searchCustomer, Discount } = req.body.formData;
+    let Product = []
     await req.body.Render?.map((key) => {
-        console.log(key);
+        Product.push({ NameProduct: key.NameProduct, Qty: key.Qty })
     })
     console.log(await createIDPaid())
-    // can chuyen du lieu vao data 
+    // can chuyen du lieu vao data S
     // lap Id Hoadon 
     // gui du lieu vao mongodb
-    // let data = {
 
+    let data = {
+        searchCustomer, Discount, Product
+    }
+
+    const checkData = await connec.getDB().collection("HoaDon").find({}).toArray();
+
+    console.info(checkData)
     // }
-
+    const result = await connec.getDB().collection("HoaDon").insertOne(data)
     // await modelHoaDon.HoaDonmodel(data)
     await res.status(200).json({ message: 'oke' });
 }
