@@ -1,16 +1,15 @@
 import connec from '../configs/connectDBmongo.js'
-import modelHoaDon from '../models/HoaDon.model.js';
 
-const paidProduct = async (req, res) => {
-    // update qty of product
+const paidProduct = async (req, res) => { // Paid Product 
     let { searchCustomer, Discount } = req.body.formData;
+    let { Render } = req.body
     let Product = []
 
-    await req.body.Render?.map((key) => {
+    await Render?.map((key) => { // push the paid Product to array
         Product.push({ NameProduct: key.NameProduct, Qty: key.Qty })
     })
 
-    const IDPaidOrder = await createIDPaid()
+    const IDPaidOrder = await createIDPaid() // create ID Paid Order
 
     let data = {
         IDPaidOrder, searchCustomer, Discount, Product, Date: Date.now()
@@ -18,11 +17,29 @@ const paidProduct = async (req, res) => {
 
     const result = await connec.getDB().collection("HoaDon").insertOne(data)
     console.info(result)
-    await res.status(200).json({ message: 'oke' });
+    if (result.acknowledged == true) {
+        updateQty(Render, connec) // update Qty Product
+        return res.status(200).json({ message: "Insertion successful!" });
+    } else {
+        return res.status(404).json({ message: "Insertion failed" });
+    }
 }
 
+const updateQty = async (Render, connec) => { // update Qty of Product 
+    await Render?.map(async (key) => {
+        const QtyOfproductHang = await connec.getDB().collection("Hang").find({ MaLK: key.NameProduct }).toArray()
+        const QtyUpdate = QtyOfproductHang[0]?.Soluong - key.Qty
 
-const createIDPaid = async () => {
+        connec.getDB().collection('Hang').updateOne(
+            { MaLK: key.NameProduct }, {
+            $set: {
+                Soluong: QtyUpdate
+            }
+        });
+    })
+}
+
+const createIDPaid = async () => { // create radom ID Paidorder
     return Math.floor(Math.random() * Math.floor(Math.random() * Date.now())).toString(16)
 }
 
