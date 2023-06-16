@@ -1,4 +1,5 @@
 import connec from '../configs/connectDBmongo.js'
+import data from "../services/renderdataHang";
 
 const paidProduct = async (req, res) => { // Paid Product 
     let { searchCustomer, Discount } = req.body.formData;
@@ -43,4 +44,11 @@ const createIDPaid = async () => { // create radom ID Paidorder
     return Math.floor(Math.random() * Math.floor(Math.random() * Date.now())).toString(16)
 }
 
-export default { paidProduct }
+const managePaid = async (req, res) => {
+    const pageIndex = req.params.pageIndex || 1;
+    const limit = 16;
+    const skip = (pageIndex - 1) * limit;
+    console.log(await data.result('HoaDon', 'renderData', '', limit, skip));
+    return res.status(200).json({ result: await data.result('HoaDon', 'renderData', '', limit, skip) });
+}
+export default { paidProduct ,managePaid }

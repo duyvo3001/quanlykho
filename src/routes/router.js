@@ -51,6 +51,7 @@ const initAPIRoute = async (app) => {
         .get('/barcodePage/:item?', authenToken, use(barcode.barcodePage))
         // ----------------Paid Order----------------------------------
         .post('/PaidOrder', authenToken, use(PaidProductController.paidProduct))
+        .get('/HomePaid/:pageIndex', authenToken, use(PaidProductController.managePaid))
         //  ---------------manage Controller --------------- 
         //  ---------------linhkien -------------------
         .get('/ImportStock/:pageIndex', authenToken, use(manageController.getManagePage))
