@@ -62,18 +62,18 @@ let SignUser = async (req, res) => {
   //check special characters
   let format = /[']+/;
   if (format.test(user_nv)) {
-    return res.status(200).json({ message: 'chứa kí tự k hợp lệ' })
+    return res.status(404).json({ message: 'chứa kí tự k hợp lệ' })
   }
 
   if (user_nv == '' || pass_nv == '')
-    return res.status(200).json({ message: "tài khoản hoặc mật khẩu để trống" })
+    return res.status(404).json({ message: "tài khoản hoặc mật khẩu để trống" })
 
   const result = await connec.getDB().collection('NhanVien').find({
     USER_NV: user_nv?.trim()
   }).toArray()
 
   if (Object.keys(result).length == 0)
-    return res.status(200).json({ message: 'tài khoản đăng nhập không đúng ' })
+    return res.status(404).json({ message: 'tài khoản đăng nhập không đúng ' })
 
   for (let i = 0; i < Object.keys(result).length; i++) {
     Repassword = result[i].PASSWORD;
@@ -91,7 +91,7 @@ let SignUser = async (req, res) => {
     }
 
     else {
-      return res.status(200).json({ message: "wrong pass" })
+      return res.status(404).json({ message: "wrong pass" })
     }
 
   }
