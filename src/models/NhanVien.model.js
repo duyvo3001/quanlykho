@@ -28,7 +28,7 @@ const NhanVienSchema = Joi.object({
         create: Joi.string().min(3).max(10),
         read: Joi.string().min(3).max(10),
         update: Joi.string().min(3).max(10),
-        Delete: Joi.string().min(3).max(10)
+        valuedelete: Joi.string().min(3).max(10)
     }
 })
 
