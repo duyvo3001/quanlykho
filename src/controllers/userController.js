@@ -62,7 +62,7 @@ let SignUser = async (req, res) => {
   //check special characters
   let format = /[']+/;
   if (format.test(user_nv)) {
-    return res.status(404).json({ message: 'chứa kí tự k hợp lệ' })
+    return res.status(404).json({ eror : "ron" , message: 'chứa kí tự k hợp lệ' })
   }
 
   if (user_nv == '' || pass_nv == '')
