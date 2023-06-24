@@ -4,7 +4,7 @@
   "description": "quan ly kho V2",
   "main": "app.js",
   "scripts": {
-    "start": "node ./src/app.js",
+    "start": "babel-node ./src/app.js",
     "dev": "nodemon --exec babel-node ./src/app.js",
     "webpack": "webpack -w"
   },
