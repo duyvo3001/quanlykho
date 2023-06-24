@@ -5,8 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "babel-node ./src/app.js",
-    "dev": "nodemon --exec babel-node ./src/app.js",
-    "build": "yarn install"
+    "dev": "nodemon --exec babel-node ./src/app.js"
   },
   "repository": {
     "type": "git",
