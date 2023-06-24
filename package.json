@@ -6,7 +6,7 @@
   "scripts": {
     "start": "babel-node ./src/app.js",
     "dev": "nodemon --exec babel-node ./src/app.js",
-    "build": "npm build"
+    "build": "babel-node ./src/app.js"
   },
   "repository": {
     "type": "git",
