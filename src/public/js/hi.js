@@ -1,4 +1,0 @@
-function abc(){
-
-}
-abc()

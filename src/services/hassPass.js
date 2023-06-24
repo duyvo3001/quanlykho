@@ -10,7 +10,7 @@ const _pass = (pass,re_pass) =>{
     return {createpass} ;
 }
 
-//kiểm tra hash
+//test hash
 const test_pass= (pass, hash) =>{
     let test =  {
         test_Hash : bcrypt.compareSync(pass, hash),  

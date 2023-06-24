@@ -2,9 +2,17 @@ import jwt from 'jsonwebtoken';
 import connec from '../configs/connectDBmongo.js'
 import model from '../models/NhanVien.model.js'
 import data from "../services/renderdataHang";
-
+import { UpdateUserServices } from "../services/UpdateItem"
 import { _pass, test_pass } from '../services/hassPass';
+import { checkfunc } from '../services/checkData'
 
+import mongoose from "mongoose"
+
+const CheckSpecialCharacters = (arrData) => {
+  let checkArr = checkfunc(arrData)
+  if (checkArr.length > 0) { return checkArr }
+  else return false;
+}
 let getStaffPage = async (req, res) => {
   const pageIndex = req.params.pageIndex || 1;
   const limit = 16;
@@ -13,12 +21,14 @@ let getStaffPage = async (req, res) => {
 }
 
 let createUser = async (req, res) => {
-  let { MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi } = req.body.formData;
+  let { MaNV, TenNV, NgaySinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi } = req.body.formData;
   let { update, read, valuedelete, create } = req.body.AccessRight;
+  let Sex = req.body.Sex;
+  console.log(DiaChi)
   const AccessRight = {
     update: update, read: read, valuedelete: valuedelete, create: create
   }
-  console.info('AccessRight', AccessRight)
+
   if (TenNV?.length < 5)
     return res.status(404).json({ message: 'hoten must be at least 5' });
   let _Pass = _pass(pass_nv, repass_nv);
@@ -34,9 +44,9 @@ let createUser = async (req, res) => {
       let data = {
         MaNV: MaNV,
         TenNV: TenNV,
-        GioiTinh: +GioiTinh,
+        GioiTinh: Sex,
         DiaChi: DiaChi,
-        NgaySinh: Date.now(),
+        NgaySinh: NgaySinh,
         USER_NV: USER_NV,
         PASSWORD: _Pass.createpass.hash,
         SDT: SDT,
@@ -62,7 +72,7 @@ let SignUser = async (req, res) => {
   //check special characters
   let format = /[']+/;
   if (format.test(user_nv)) {
-    return res.status(404).json({ eror : "ron" , message: 'chứa kí tự k hợp lệ' })
+    return res.status(404).json({ eror: "ron", message: 'chứa kí tự k hợp lệ' })
   }
 
   if (user_nv == '' || pass_nv == '')
@@ -97,11 +107,48 @@ let SignUser = async (req, res) => {
   }
 }
 
-let register = (req, res) => {
-  res.render('register.ejs');
-}
-let updateUser = (req, res) => {
-  let { MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, accessrights } = req.body.formData;
+let updateUser = async (req, res) => {
 
+  let {
+    MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, _id
+  } = req.body.formData;
+  let arrData = [MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi];
+
+  //check special characters
+  let e = CheckSpecialCharacters(arrData)
+  if (e != false)
+    return res.status(404).json({ error: 'chứa kí tự đặc biệt', Character: e })
+
+  //kiểm tra trùng mã lập 
+  let querycheck = connec.getDB().collection('Hang').find({ MaNV }).toArray()
+  if (Object.keys(querycheck).length == 1)
+    return res.status(404).json({ message: 'trùng mã nhân viên' })
+
+  let _Pass = _pass(pass_nv, repass_nv);
+
+  let UpdateuserServices = new UpdateUserServices()
+
+  let updateItem = UpdateuserServices.getTransport(
+    {
+      MaNV, TenNV, NgaySinh, GioiTinh, USER_NV,
+      pass_nv: _Pass.createpass.hash, SDT, Email, DiaChi,
+      accessrights: req.body.AccessRight
+    }
+  )
+  let fileId = new mongoose.Types.ObjectId(_id);
+
+  await connec.getDB().collection('NhanVien').updateOne(
+    { _id: fileId }, {
+    $set: updateItem
+  }
+  );
+
+  return res.status(200).json({ message: "oke" })
 }
-export default { getStaffPage, createUser, SignUser, register };  
+
+let deleteUser = async (req, res) => {
+  let MaNV = req.params.item
+  await connec.getDB().collection('NhanVien').deleteMany({ MaNV: MaNV.trim() })
+  res.status(200).json({ message: 'delete sucsess' })
+}
+export default { getStaffPage, createUser, SignUser, deleteUser, updateUser };  

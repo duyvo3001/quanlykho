@@ -56,32 +56,6 @@ let ImportLinhkien = async (req, res) => {
 
   res.status(200).json('message', 'oke');
 }
-
-let adjustmentPricePage = async (req, res) => {
-  let { MaLK } = req.params;
-  res.render('adjustmentPrice.ejs', { result: await data.result('Hang', 'render', MaLK) })
-}
-
-let adjustmentPrice = async (req, res) => {
-  let { MaLK, GiaBanLe } = req.body;
-  let arrData = [MaLK, GiaBanLe]
-
-  // check null 
-  for (let i = 0; i < arrData.length; i++) {
-    if (arrData[i] == '') return res.send('không để trống hàng cần sửa')
-  }
-
-  //check special characters
-  let e = CheckSpecialCharacters(arrData)
-  if (e != false) return res.error({ error: 'chứa kí tự đặc biệt', Character: e })
-
-  await connec.getDB().collection('Hang').updateOne(
-    { MaLK },
-    { $set: { GiaBanLe } }
-  )
-
-  return res.redirect('/adjustmentPricePage');
-}
 //render page linh kien
 let getManagePage = async (req, res) => {
   const pageIndex = req.params.pageIndex || 1;
@@ -121,6 +95,7 @@ let editStock = async (req, res) => {
   );
 
   return res.status(200).json({ message: "oke" })
+
 }
 
 //----------------------------------------- Nhà cung cấp------------------------------------
@@ -194,9 +169,8 @@ let getThuongHieupage = async (req, res) => { // render page import
 }
 let importThuongHieu = async (req, res) => {
   let { MaThuongHieu, TenThuongHieu } = req.body.formData;
-  let TenThuongHieu1 = "hello"
   //check special characters
-  let arrData = [MaThuongHieu, TenThuongHieu ,TenThuongHieu1]
+  let arrData = [MaThuongHieu, TenThuongHieu]
   console.log(arrData);
   let e = CheckSpecialCharacters(arrData)
   if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
@@ -208,7 +182,7 @@ let importThuongHieu = async (req, res) => {
   if (Object.keys(querycheck).length == 1)
     return res.send('trùng mã nhập hàng')
 
-  let data = { MaThuongHieu, TenThuongHieu, TenThuongHieu1 , NgayNhap: Date.now() }
+  let data = { MaThuongHieu, TenThuongHieu, NgayNhap: Date.now() }
   await modelThuongHieu.ThuongHieumodel(data)
 
   res.status(200).json('message', 'oke');
@@ -250,8 +224,6 @@ let editBrand = async (req, res) => {
 //--------------------------------------------------------------------------
 export default
   {
-    adjustmentPrice,
-    adjustmentPricePage,
     getManagePage,
     ImportLinhkien,
     editStock,
@@ -263,5 +235,5 @@ export default
     getThuongHieupage,
     importThuongHieu,
     deleteBrand,
-    editBrand 
+    editBrand
   };      

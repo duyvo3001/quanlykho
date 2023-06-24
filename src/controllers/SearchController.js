@@ -23,16 +23,4 @@ const SearchStock = async (req, res) => {
   return res.status(200).json({ result: datarender })
 }
 
-const SearchSupplier = async (req, res) => {
-  let { search } = req.body;
-  searchfunc(search) ? res.send('chứa kí tự đặt biệt') :
-    res.render('importNCC.ejs', { result: await data.result('NCC', '', search) })
-}
-
-const SearchBrand = async (req, res) => {
-  let { search } = req.body;
-  searchfunc(search) ? res.send('chứa kí tự đặt biệt') :
-    res.render('importThuongHieu.ejs', { result: await data.result('ThuongHieu', '', search) })
-}
-
-export default { SearchStock, SearchSupplier, SearchBrand  }
+export default { SearchStock  }

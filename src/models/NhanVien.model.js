@@ -8,7 +8,7 @@ const NhanVienSchema = Joi.object({
 
     TenNV: Joi.string().min(3).max(50).required(),
 
-    GioiTinh: Joi.number().required(),
+    GioiTinh: Joi.string().min(3).max(50).required(),
 
     DiaChi: Joi.string().min(1).max(50).required(),
 

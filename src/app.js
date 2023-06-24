@@ -8,14 +8,11 @@ import bodyParser from "body-parser";
 import configViewEngine from "./configs/ViewEngine.js";
 import connectionDBMG from "./configs/connectDBmongo.js";
 //session
-const session = require("express-session");
-const cookieParser = require("cookie-parser");
 
 const dotenv = require("dotenv");
 dotenv.config();
 
 const port = process.env.PORT || 3000;
-let path = require("path");
 let rfs = require("rotating-file-stream"); // version 2.x
 
 let accessLogStream = rfs.createStream("access.log", {
@@ -80,11 +77,11 @@ const bootserver = () => {
     .use(function (err, req, res, next) {
       //error handler
       console.log(err);
-      res.render("404.ejs", { layout: false });
+      res.status(500).json({ message: false });
     })
     .use((req, res) => {
       // 404 page error
-      return res.render("404.ejs", { layout: false });
+      res.status(500).json({ message: false });
     })
     .listen(port, () => console.log(`Example app listening on port ${port}`));
 };

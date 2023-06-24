@@ -65,6 +65,7 @@ class Customer {
 }
 class User {
     constructor({ MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, SDT, Email, DiaChi, accessrights }) {
+        console.info(pass_nv)
         if (MaNV)
             this.MaNV = MaNV
         if (TenNV)
