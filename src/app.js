@@ -26,7 +26,7 @@ const app = express();
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Origin', process.env.UrlWebClient);
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -59,7 +59,7 @@ const bootserver = () => {
     .use(helmet()) // protect nodejs
     .use(cors(
       {
-        origin: ["http://localhost:3000"] ,
+        origin: [process.env.UrlWebClient] ,
         optionsSuccessStatus: 200
       }
     ))
