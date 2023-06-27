@@ -26,6 +26,7 @@ const authenToken = (req, res, next) => {
         next();
     })
 }
+
 const initAPIRoute = async (app) => {
     router
         //-----------------WareHouse Controller----------------
@@ -67,7 +68,9 @@ const initAPIRoute = async (app) => {
         //  ---------------report Controller --------------- 
         .get('/ReportPage', use(reportController.getReportPage))
         // ----------------Search----------------------------
-        .post('/SearchStock', authenToken, use(SearchController.SearchStock))
+        .get('/SearchStock', authenToken, use(SearchController.SearchStock))
+        .get('/SearchCustomer', authenToken, use(SearchController.SearchCustomer))
+        .get('/SearchStockExport', authenToken, use(SearchController.SearchStockExport))
         .get('/test', function (req, res) {
             return res.json({ test: 'abcdefghijklmnopqrstuvwxyz' });
         })

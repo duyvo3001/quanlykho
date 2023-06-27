@@ -1,3 +1,4 @@
+import connec from '../configs/connectDBmongo.js'
 import data from "../services/renderdataHang";
 const searchfunc = (search) => {
   var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
@@ -22,5 +23,24 @@ const SearchStock = async (req, res) => {
 
   return res.status(200).json({ result: datarender })
 }
+const SearchCustomer = async (req, res) => {
+  
+  let datarender = await connec.getDB().collection("Customer").find({}).toArray();
 
-export default { SearchStock  }
+  if (datarender == null) {
+    return res.status(500).json({ message: 'rong!' })
+  }
+
+  return res.status(200).json({ result: datarender })
+}
+const SearchStockExport = async (req, res) => {
+
+  let datarender = await connec.getDB().collection("Hang").find({}).toArray();
+
+  if (datarender == null) {
+    return res.status(500).json({ message: 'rong!' })
+  }
+
+  return res.status(200).json({ result: datarender })
+}
+export default { SearchStock, SearchStockExport, SearchCustomer }

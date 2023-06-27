@@ -40,7 +40,7 @@ const createNew = async (data) => {
         const result = await connec.getDB().collection(Hangcollection).insertOne(value)
         return result
     } catch (error) {
-        console.error(error);
+        return error
     }
 }
 

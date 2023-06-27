@@ -27,7 +27,7 @@ let ImportLinhkien = async (req, res) => {
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
-    return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+    return res.status(500).json({ error: 'chứa kí tự đặc biệt', Character: e })
 
   // kiểm tra trùng lập 
   let querycheck = await connec.getDB().collection('Hang').find({
@@ -36,7 +36,7 @@ let ImportLinhkien = async (req, res) => {
 
   //check trùng mã nhập hàng 
   if (Object.keys(querycheck).length == 1)
-    return res.send('trùng mã nhập hàng')
+    return res.status(500).json({ message: 'trùng mã nhập hàng' })
 
   let data = {
     MaLK,
@@ -52,9 +52,17 @@ let ImportLinhkien = async (req, res) => {
     GiaBanLe,
     TinhTrangHang,
   }
-  await modelHang.Hangmodel(data)
-
-  res.status(200).json('message', 'oke');
+  try {
+    let result = await modelHang.Hangmodel(data)
+    if (result.acknowledged === true) {
+      return res.status(200).json({ message: 'Create product success' });
+    }
+    else {
+      return res.status(500).json({ message: `Can not create product` })
+    }
+  } catch (error) {
+    return res.status(500).json({ message: `Can not create product` })
+  }
 }
 //render page linh kien
 let getManagePage = async (req, res) => {
