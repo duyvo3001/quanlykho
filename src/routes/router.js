@@ -71,6 +71,9 @@ const initAPIRoute = async (app) => {
         .get('/SearchStock', authenToken, use(SearchController.SearchStock))
         .get('/SearchCustomer', authenToken, use(SearchController.SearchCustomer))
         .get('/SearchStockExport', authenToken, use(SearchController.SearchStockExport))
+        .get('/SearchBrand', authenToken, use(SearchController.SearchBrand))
+        .get('/SearchWarehouse', authenToken, use(SearchController.SearchWarehouse))
+        .get('/SearchSupplier', authenToken, use(SearchController.SearchSupplier))
         .get('/test', function (req, res) {
             return res.json({ test: 'abcdefghijklmnopqrstuvwxyz' });
         })

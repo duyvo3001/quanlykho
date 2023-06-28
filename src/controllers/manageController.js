@@ -17,17 +17,17 @@ const CheckSpecialCharacters = (arrData) => {
 let ImportLinhkien = async (req, res) => {
 
   let { MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body.formData;
-  let arrData = [MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
+  let arrData = [MaLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
 
   //check trống hàng 
   for (let i = 0; i < arrData.length; i++) {
-    if (arrData[i] == '') return res.send('không để trống hàng');
+    if (arrData[i] == '') return res.status(500).json({ message: 'không để trống hàng', Character: e })
   }
 
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
-    return res.status(500).json({ error: 'chứa kí tự đặc biệt', Character: e })
+    return res.status(500).json({ message: 'chứa kí tự đặc biệt', Character: e })
 
   // kiểm tra trùng lập 
   let querycheck = await connec.getDB().collection('Hang').find({
@@ -52,8 +52,10 @@ let ImportLinhkien = async (req, res) => {
     GiaBanLe,
     TinhTrangHang,
   }
+  console.log(data)
   try {
     let result = await modelHang.Hangmodel(data)
+    console.log(result);
     if (result.acknowledged === true) {
       return res.status(200).json({ message: 'Create product success' });
     }
@@ -131,11 +133,22 @@ let importNCC = async (req, res) => {
   if (Object.keys(querycheck).length == 1)
     return res.status(500).json({ message: 'trùng mã nhập hàng' })
 
-  let data = {
-    MaNCC, TenNCC, DiaChi, SDT, Email, NgayNhap: Date.now(),
+
+
+  try {
+    let data = {
+      MaNCC, TenNCC, DiaChi, SDT, Email, NgayNhap: Date.now(),
+    }
+    const result = await modelNCC.NCCmodel(data)
+    if (result.acknowledged === true) {
+      return res.status(200).json({ message: 'Create product success' });
+    }
+    else {
+      return res.status(500).json({ message: `Can not create product` })
+    }
+  } catch (error) {
+    return res.status(500).json({ message: `Can not create product` })
   }
-  await modelNCC.NCCmodel(data)
-  return res.status(200).json('message', 'oke');
 }
 
 let deleteSupplier = async (req, res) => {
@@ -179,21 +192,31 @@ let importThuongHieu = async (req, res) => {
   let { MaThuongHieu, TenThuongHieu } = req.body.formData;
   //check special characters
   let arrData = [MaThuongHieu, TenThuongHieu]
-  console.log(arrData);
+
   let e = CheckSpecialCharacters(arrData)
-  if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+  if (e != false) return res.status(200).json({ error: 'chứa kí tự đặc biệt', Character: e })
 
   // check mã trùng lập 
   let querycheck = await connec.getDB().collection('ThuongHieu').find({
     MaThuongHieu
   }).toArray()
+
   if (Object.keys(querycheck).length == 1)
-    return res.send('trùng mã nhập hàng')
+    return res.status(200).json('trùng mã nhập hàng')
 
-  let data = { MaThuongHieu, TenThuongHieu, NgayNhap: Date.now() }
-  await modelThuongHieu.ThuongHieumodel(data)
+  try {
+    let data = { MaThuongHieu, TenThuongHieu, NgayNhap: Date.now() }
+    let result = await modelThuongHieu.ThuongHieumodel(data)
 
-  res.status(200).json('message', 'oke');
+    if (result.acknowledged === true) {
+      return res.status(200).json({ message: 'Create product success' });
+    }
+    else {
+      return res.status(500).json({ message: `Can not create product` })
+    }
+  } catch (error) {
+    return res.status(500).json({ message: `Can not create product` })
+  }
 }
 let deleteBrand = async (req, res) => {
   let MaThuongHieu = req.params.item

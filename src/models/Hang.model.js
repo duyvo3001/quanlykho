@@ -6,9 +6,9 @@ const HangSchema = Joi.object({
 
     MaLK: Joi.string().alphanum().min(3).max(50).required(),
 
-    TenLK: Joi.string().min(3).max(50).required(),
+    TenLK: Joi.string().min(3).max(200).required(),
 
-    Donvi: Joi.string().alphanum().min(3).max(50).required(),
+    Donvi: Joi.string().min(3).max(50).required(),
 
     Soluong: Joi.number().required(),
 

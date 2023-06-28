@@ -41,19 +41,29 @@ let importCustomer = async (req, res) => {
     if (Object.keys(querycheck).length == 1)
         return res.status(200).json('message', 'oke');
 
-    let data = {
-        IDCustomer, NameCustomer, Phone, Email, NgayTao: Date.now(),
-    }
-    await modelCustomer.Customermodel(data)
 
-    return res.status(200).json('message', 'oke');
+
+    try {
+        let data = {
+            IDCustomer, NameCustomer, Phone, Email, NgayTao: Date.now(),
+        }
+        const result = await modelCustomer.Customermodel(data)
+        if (result.acknowledged === true) {
+            return res.status(200).json({ message: 'Create product success' });
+        }
+        else {
+            return res.status(500).json({ message: `Can not create product` })
+        }
+    } catch (error) {
+        return res.status(500).json({ message: `Can not create product` })
+    }
 
 }
 
 let UpdateCustomer = async (req, res) => {
 
-    let { _id ,IDCustomer, NameCustomer, Phone, Email } = req.body.formData
-    
+    let { _id, IDCustomer, NameCustomer, Phone, Email } = req.body.formData
+
     let arrData = [IDCustomer, NameCustomer, Phone, Email]
     console.log(arrData);
     let updateCustomerServices = new UpdateCustomerServices()

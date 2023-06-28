@@ -1,6 +1,6 @@
 import connec from '../configs/connectDBmongo.js'
 import data from "../services/renderdataHang";
-import model from"../models/KhoHang.model"
+import model from "../models/KhoHang.model"
 import { checkfunc } from '../services/checkData'
 import { UpdateWarehouseServices } from "../services/UpdateItem";
 import mongoose from "mongoose"
@@ -8,7 +8,7 @@ const CheckSpecialCharacters = (arrData) => {
     let checkArr = checkfunc(arrData)
     if (checkArr.length > 0) { return checkArr }
     else return false;
-  }
+}
 let getWarehousePage = async (req, res) => { // render page import 
     const pageIndex = req.params.pageIndex || 1;
     const limit = 25;
@@ -22,19 +22,27 @@ let importWarehouse = async (req, res) => { // render page import
     let arrData = [MaKho, TenKho, DiaChi, SDT]
     console.log(arrData);
     let e = CheckSpecialCharacters(arrData)
-    if (e != false) return res.send({ error: 'chứa kí tự đặc biệt', Character: e })
+    if (e != false) return res.status(500).json({ message: 'chứa kí tự đặc biệt', Character: e })
 
     // check mã trùng lập 
     let querycheck = await connec.getDB().collection('KhoHang').find({
         MaKho
     }).toArray()
     if (Object.keys(querycheck).length == 1)
-        return res.send('trùng mã nhập Kho')
+        return res.status(500).json('trùng mã nhập Kho')
 
-    let data = { MaKho, TenKho, NgayTao: Date.now() }
-    await model.KhoHangmodel(data)
-
-    res.status(200).json('message', 'oke');
+    try {
+        let data = { MaKho, TenKho, DiaChi, SDT, NgayTao: Date.now() }
+        const result = await model.KhoHangmodel(data)
+        if (result.acknowledged === true) {
+            return res.status(200).json({ message: 'Create product success' });
+        }
+        else {
+            return res.status(500).json({ message: `Can not create product` })
+        }
+    } catch (error) {
+        return res.status(500).json({ message: `Can not create product` })
+    }
 }
 let deleteWarehouse = async (req, res) => {
     let MaKho = req.params.item
@@ -54,12 +62,12 @@ let editWarehouse = async (req, res) => {
     //check special characters
     let e = CheckSpecialCharacters(arrData)
     if (e != false)
-        return res.status(404).json({ error: 'chứa kí tự đặc biệt', Character: e })
+        return res.status(500).json({ error: 'chứa kí tự đặc biệt', Character: e })
 
     //kiểm tra trùng mã lập 
     let querycheck = connec.getDB().collection('KhoHang').find({ MaKho }).toArray()
     if (Object.keys(querycheck).length == 1)
-        return res.status(404).json({ message: 'trùng mã sửa hàng' })
+        return res.status(500).json({ message: 'trùng mã sửa hàng' })
 
     // query update
     await connec.getDB().collection('KhoHang').updateOne(

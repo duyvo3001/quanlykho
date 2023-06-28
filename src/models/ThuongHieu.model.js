@@ -6,7 +6,7 @@ const ThuongHieuSchema = Joi.object({
 
     MaThuongHieu: Joi.string().alphanum().min(3).max(50).required(),
 
-    TenThuongHieu: Joi.string().min(3).max(50).required(),
+    TenThuongHieu: Joi.string().min(2).max(50).required(),
 
     NgayNhap: Joi.date().required()
 

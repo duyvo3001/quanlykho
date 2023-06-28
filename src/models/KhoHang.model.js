@@ -6,11 +6,11 @@ const KhoHangSchema = Joi.object({
 
     MaKho: Joi.string().alphanum().min(3).max(50).required(),
 
-    TenKho: Joi.string().max(50).required(),
+    TenKho: Joi.string().max(100).required(),
 
-    DiaChi: Joi.string().min(3).max(50).required(),
+    DiaChi: Joi.string().min(3).max(200).required(),
     
-    SDT: Joi.string().min(5).max(12).required(),
+    SDT: Joi.string().min(5).max(20).required(),
 
     NgayTao: Joi.date().required()
 
