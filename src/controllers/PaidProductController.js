@@ -2,10 +2,10 @@ import connec from '../configs/connectDBmongo.js'
 import data from "../services/renderdataHang";
 
 const paidProduct = async (req, res) => { // Paid Product 
-    let { searchCustomer, Discount } = req.body.formData;
+    let { IDCustomer, Discount } = req.body.formData;
     let { Render } = req.body
     let Product = []
-
+    console.info(IDCustomer, Discount, Render)
     await Render?.map((key) => { // push the paid Product to array
         Product.push({ NameProduct: key.NameProduct, Qty: key.Qty })
     })
@@ -13,9 +13,9 @@ const paidProduct = async (req, res) => { // Paid Product
     const IDPaidOrder = await createIDPaid() // create ID Paid Order
 
     let data = {
-        IDPaidOrder, searchCustomer, Discount, Product, Date: Date.now()
+        IDPaidOrder, IDCustomer, Discount, Product, Date: Date.now()
     }
-
+    console.info(data)
     const result = await connec.getDB().collection("HoaDon").insertOne(data)
     console.info(result)
     if (result.acknowledged == true) {
@@ -48,7 +48,12 @@ const managePaid = async (req, res) => {
     const pageIndex = req.params.pageIndex || 1;
     const limit = 16;
     const skip = (pageIndex - 1) * limit;
-    console.log(await data.result('HoaDon', 'renderData', '', limit, skip));
     return res.status(200).json({ result: await data.result('HoaDon', 'renderData', '', limit, skip) });
 }
-export default { paidProduct ,managePaid }
+
+const getInvoice = async (req, res) => {
+    const invoice = req.params.invoice
+    return res.status(200).json({ result: await data.result('HoaDon', '', invoice, '', '', '') })
+}
+
+export default { paidProduct, managePaid ,getInvoice }

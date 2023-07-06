@@ -1,6 +1,5 @@
 import express from "express";
 import initAPIRoute from "./routes/router.js";
-import inittestAPIRoute from "./routes/testrouter.js";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
@@ -70,8 +69,6 @@ const bootserver = () => {
   configViewEngine(app);
 
   initAPIRoute(app);
-
-  inittestAPIRoute(app);
 
   app
     .use(function (err, req, res, next) {

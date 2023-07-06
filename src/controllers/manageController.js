@@ -202,7 +202,7 @@ let importThuongHieu = async (req, res) => {
   }).toArray()
 
   if (Object.keys(querycheck).length == 1)
-    return res.status(200).json('trùng mã nhập hàng')
+    return res.status(500).json({message :'trùng mã nhập hàng'})
 
   try {
     let data = { MaThuongHieu, TenThuongHieu, NgayNhap: Date.now() }

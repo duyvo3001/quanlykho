@@ -39,6 +39,7 @@ const initAPIRoute = async (app) => {
         .post('/ImportCustomer', authenToken, use(CustomerController.importCustomer))
         .patch('/UpdateCustomer', authenToken, use(CustomerController.UpdateCustomer))
         .post('/DeleteCustomer/:item', authenToken, use(CustomerController.DeleteCustomer))
+        .get('/infoCustomer/:item', authenToken, use(CustomerController.infoCustomer))
         //  ---------------login Controller--------------- 
         .get('/StaffPage/:pageIndex', authenToken, use(userController.getStaffPage))
         .post('/createstaff', authenToken, use(userController.createUser))
@@ -47,6 +48,7 @@ const initAPIRoute = async (app) => {
         .post('/signin', use(userController.SignUser))
         // ----------------Paid Order----------------------------------
         .post('/PaidOrder', authenToken, use(PaidProductController.paidProduct))
+        .get('/getInvoice/:invoice', authenToken, use(PaidProductController.getInvoice))
         .get('/HomePaid/:pageIndex', authenToken, use(PaidProductController.managePaid))
         //  ---------------manage Controller --------------- 
         //  ---------------linhkien -------------------

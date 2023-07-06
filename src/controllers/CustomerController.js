@@ -93,4 +93,10 @@ let DeleteCustomer = async (req, res) => {
     await connec.getDB().collection('Customer').deleteMany({ IDCustomer })
     return res.status(200).json('message', 'oke');
 }
-export default { CustomerPage, importCustomer, UpdateCustomer, DeleteCustomer }
+
+let infoCustomer = async (req, res) => {
+    const customerId = req.params.item
+    return res.status(200).json({ result: await data.result('Customer', '', customerId, "", "") });
+}
+
+export default { CustomerPage, importCustomer, UpdateCustomer, DeleteCustomer, infoCustomer }

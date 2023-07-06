@@ -75,4 +75,16 @@ const SearchSupplier = async (req, res) => {
 
   return res.status(200).json({ result: datarender })
 }
-export default { SearchStock, SearchStockExport, SearchCustomer ,SearchBrand , SearchWarehouse ,SearchSupplier}
+
+const SearchInvoice = async (req, res) => {
+
+  let datarender = await connec.getDB().collection("HoaDon").find({}).toArray();
+
+  if (datarender == null) {
+    return res.status(500).json({ message: 'null!' })
+  }
+
+  return res.status(200).json({ result: datarender })
+}
+
+export default { SearchStock, SearchStockExport, SearchCustomer ,SearchBrand , SearchWarehouse ,SearchInvoice,SearchSupplier}
