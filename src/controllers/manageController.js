@@ -107,7 +107,10 @@ let editStock = async (req, res) => {
   return res.status(200).json({ message: "oke" })
 
 }
-
+let getProduct = async (req, res) => {
+  const product = req.params.item
+  return res.status(200).json({ result: await data.result('Hang', '', product, "", "") });
+}
 //----------------------------------------- Nhà cung cấp------------------------------------
 let getNCCpage = async (req, res) => {
 
@@ -266,5 +269,6 @@ export default
     getThuongHieupage,
     importThuongHieu,
     deleteBrand,
-    editBrand
+    editBrand,
+    getProduct
   };      

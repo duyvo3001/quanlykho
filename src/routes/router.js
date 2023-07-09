@@ -56,6 +56,7 @@ const initAPIRoute = async (app) => {
         .post('/PostStock', authenToken, use(manageController.ImportLinhkien))
         .post('/deleteStock/:item', authenToken, use(manageController.deleteStock))
         .patch('/editStock', authenToken, use(manageController.editStock))
+        .get('/getProduct/:item', authenToken, use(manageController.getProduct))
         //  ---------------NCC ------------------------
         .get('/HomeSupplier/:pageIndex', authenToken, use(manageController.getNCCpage))
         .post('/PostSupplier', authenToken, use(manageController.importNCC))
