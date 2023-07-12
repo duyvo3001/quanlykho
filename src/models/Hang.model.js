@@ -14,8 +14,6 @@ const HangSchema = Joi.object({
 
     NgayNhap: Joi.date().required(),
 
-    NgayXuat: Joi.date(),
-
     MaThuongHieu: Joi.string().min(3).max(50).required(),
 
     MaNCC: Joi.string().min(3).max(50).required(),

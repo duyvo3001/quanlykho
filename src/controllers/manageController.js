@@ -44,7 +44,6 @@ let ImportLinhkien = async (req, res) => {
     Donvi,
     Soluong,
     NgayNhap: Date.now(),
-    NgayXuat: '01/01/2001',
     MaThuongHieu,
     MaNCC,
     Color,
@@ -53,18 +52,18 @@ let ImportLinhkien = async (req, res) => {
     TinhTrangHang,
   }
   console.log(data)
-  try {
-    let result = await modelHang.Hangmodel(data)
-    console.log(result);
-    if (result.acknowledged === true) {
-      return res.status(200).json({ message: 'Create product success' });
-    }
-    else {
-      return res.status(500).json({ message: `Can not create product` })
-    }
-  } catch (error) {
-    return res.status(500).json({ message: `Can not create product` })
-  }
+  // try {
+  //   let result = await modelHang.Hangmodel(data)
+  //   console.log(result);
+  //   if (result.acknowledged === true) {
+  //     return res.status(200).json({ message: 'Create product success' });
+  //   }
+  //   else {
+  //     return res.status(500).json({ message: `Can not create product` })
+  //   }
+  // } catch (error) {
+  //   return res.status(500).json({ message: `Can not create product` })
+  // }
 }
 //render page linh kien
 let getManagePage = async (req, res) => {
