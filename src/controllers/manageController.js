@@ -51,19 +51,18 @@ let ImportLinhkien = async (req, res) => {
     GiaBanLe,
     TinhTrangHang,
   }
-  console.log(data)
-  // try {
-  //   let result = await modelHang.Hangmodel(data)
-  //   console.log(result);
-  //   if (result.acknowledged === true) {
-  //     return res.status(200).json({ message: 'Create product success' });
-  //   }
-  //   else {
-  //     return res.status(500).json({ message: `Can not create product` })
-  //   }
-  // } catch (error) {
-  //   return res.status(500).json({ message: `Can not create product` })
-  // }
+  try {
+    let result = await modelHang.Hangmodel(data)
+    console.log(result);
+    if (result.acknowledged === true) {
+      return res.status(200).json({ message: 'Create product success' });
+    }
+    else {
+      return res.status(500).json({ message: `Can not create product` })
+    }
+  } catch (error) {
+    return res.status(500).json({ message: `Can not create product` })
+  }
 }
 //render page linh kien
 let getManagePage = async (req, res) => {
@@ -75,8 +74,15 @@ let getManagePage = async (req, res) => {
 //post delete item linh kien  
 let deleteStock = async (req, res) => {
   let MaLK = req.params.item
-  await connec.getDB().collection('Hang').deleteMany({ MaLK })
-  return res.status(200).json('message', 'oke');
+  console.log(MaLK)
+  let Resultdata = await connec.getDB().collection('Hang').deleteMany({ MaLK })
+  
+  if (Resultdata.acknowledged == true && Resultdata.deletedCount == 1) {
+    return res.status(200).json({ message: 'oke' });
+  }
+  else {
+    return res.status(500).json({ error: 'erorr' });
+  }
 }
 //post edit item linh kien 
 let editStock = async (req, res) => {
@@ -112,7 +118,6 @@ let getProduct = async (req, res) => {
 }
 //----------------------------------------- Nhà cung cấp------------------------------------
 let getNCCpage = async (req, res) => {
-
   const pageIndex = req.params.pageIndex || 1;
   const limit = 20;
   const skip = (pageIndex - 1) * limit;
@@ -155,8 +160,13 @@ let importNCC = async (req, res) => {
 
 let deleteSupplier = async (req, res) => {
   let MaNCC = req.params.item
-  await connec.getDB().collection('NCC').deleteMany({ MaNCC })
-  res.status(200).json('message', 'oke');
+  let Resultdata = await connec.getDB().collection('NCC').deleteMany({ MaNCC })
+  if (Resultdata.acknowledged == true && Resultdata.deletedCount == 1) {
+    return res.status(200).json({ message: 'oke' });
+  }
+  else{
+    return res.status(500).json({ error: 'erorr' });
+  }
 }
 let editSupplier = async (req, res) => {
   let { MaNCC, TenNCC, DiaChi, SDT, _id } = req.body.formData;
@@ -204,7 +214,7 @@ let importThuongHieu = async (req, res) => {
   }).toArray()
 
   if (Object.keys(querycheck).length == 1)
-    return res.status(500).json({message :'trùng mã nhập hàng'})
+    return res.status(500).json({ message: 'trùng mã nhập hàng' })
 
   try {
     let data = { MaThuongHieu, TenThuongHieu, NgayNhap: Date.now() }
@@ -222,8 +232,13 @@ let importThuongHieu = async (req, res) => {
 }
 let deleteBrand = async (req, res) => {
   let MaThuongHieu = req.params.item
-  await connec.getDB().collection('ThuongHieu').deleteMany({ MaThuongHieu })
-  res.status(200).json({ message: 'delete sucsess' })
+  let Resultdata = await connec.getDB().collection('ThuongHieu').deleteMany({ MaThuongHieu })
+  if (Resultdata.acknowledged == true && Resultdata.deletedCount == 1) {
+    return res.status(200).json({ message: 'oke' });
+  }
+  else{
+    return res.status(500).json({ error: 'erorr' });
+  }
 }
 let editBrand = async (req, res) => {
   let { MaThuongHieu, TenThuongHieu, _id } = req.body.formData;

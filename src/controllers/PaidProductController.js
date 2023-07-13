@@ -68,5 +68,9 @@ const getInvoice = async (req, res) => {
     const invoice = req.params.invoice
     return res.status(200).json({ result: await data.result('HoaDon', '', invoice, '', '', '') })
 }
-
-export default { paidProduct, managePaid, getInvoice }
+const DeleteOrder = async (req, res) => {
+    const IDPaidOrder = req.params.item
+    await connec.getDB().collection('HoaDon').deleteMany({ IDPaidOrder })
+    res.status(200).json({ message: 'delete sucsess' })
+}
+export default { paidProduct, managePaid, getInvoice ,DeleteOrder}

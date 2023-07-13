@@ -48,6 +48,7 @@ const initAPIRoute = async (app) => {
         .post('/signin', use(userController.SignUser))
         // ----------------Paid Order----------------------------------
         .post('/PaidOrder', authenToken, use(PaidProductController.paidProduct))
+        .post('/DeleteOrder/:item', authenToken, use(PaidProductController.DeleteOrder))
         .get('/getInvoice/:invoice', authenToken, use(PaidProductController.getInvoice))
         .get('/HomePaid/:pageIndex', authenToken, use(PaidProductController.managePaid))
         //  ---------------manage Controller --------------- 
