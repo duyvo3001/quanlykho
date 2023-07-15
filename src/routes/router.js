@@ -72,6 +72,7 @@ const initAPIRoute = async (app) => {
         //  ---------------report Controller --------------- 
         .get('/ReportPage', use(reportController.getReportPage))
         // ----------------Search----------------------------
+        .get('/SearchDateProduct',use(SearchController.SearchDateProduct ))
         .get('/SearchStock', authenToken, use(SearchController.SearchStock))
         .get('/SearchCustomer', authenToken, use(SearchController.SearchCustomer))
         .get('/SearchStockExport', authenToken, use(SearchController.SearchStockExport))

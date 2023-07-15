@@ -24,7 +24,7 @@ const SearchStock = async (req, res) => {
   return res.status(200).json({ result: datarender })
 }
 const SearchCustomer = async (req, res) => {
-  
+
   let datarender = await connec.getDB().collection("Customer").find({}).toArray();
 
   if (datarender == null) {
@@ -87,4 +87,11 @@ const SearchInvoice = async (req, res) => {
   return res.status(200).json({ result: datarender })
 }
 
-export default { SearchStock, SearchStockExport, SearchCustomer ,SearchBrand , SearchWarehouse ,SearchInvoice,SearchSupplier}
+const SearchDateProduct = async (req, res) => {
+  let datarender = await connec.getDB().collection("Hang").find({
+    NgayNhap: { $gte: new Date("2023-6-01"), $lt: new Date("2023-07-01") }
+  }).toArray();
+  console.log(datarender);
+  return res.status(200).json({ result: datarender })
+}
+export default { SearchDateProduct, SearchStock, SearchStockExport, SearchCustomer, SearchBrand, SearchWarehouse, SearchInvoice, SearchSupplier }
