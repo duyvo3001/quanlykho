@@ -76,7 +76,7 @@ let deleteStock = async (req, res) => {
   let MaLK = req.params.item
   console.log(MaLK)
   let Resultdata = await connec.getDB().collection('Hang').deleteMany({ MaLK })
-  
+
   if (Resultdata.acknowledged == true && Resultdata.deletedCount == 1) {
     return res.status(200).json({ message: 'oke' });
   }
@@ -111,6 +111,19 @@ let editStock = async (req, res) => {
 
   return res.status(200).json({ message: "oke" })
 
+}
+let AddProduct = async (req, res) => {
+  let { MaLK, Soluong } = req.body.formData;
+  let _QTYproduct = await data.result('Hang', '', MaLK, "", "")
+
+  let _TotalQtyProuct = Number(_QTYproduct[0].Soluong) + Number(Soluong)
+
+  const reslut = await connec.getDB().collection('Hang').updateOne(
+    { MaLK }, {
+    $set: { Soluong: _TotalQtyProuct }
+  }
+  );
+  return reslut.acknowledged === true ? res.status(200).json({ message: "update successfully" }) : res.status(500).json({ message: "update error" });
 }
 let getProduct = async (req, res) => {
   const product = req.params.item
@@ -164,7 +177,7 @@ let deleteSupplier = async (req, res) => {
   if (Resultdata.acknowledged == true && Resultdata.deletedCount == 1) {
     return res.status(200).json({ message: 'oke' });
   }
-  else{
+  else {
     return res.status(500).json({ error: 'erorr' });
   }
 }
@@ -236,7 +249,7 @@ let deleteBrand = async (req, res) => {
   if (Resultdata.acknowledged == true && Resultdata.deletedCount == 1) {
     return res.status(200).json({ message: 'oke' });
   }
-  else{
+  else {
     return res.status(500).json({ error: 'erorr' });
   }
 }
@@ -272,6 +285,7 @@ let editBrand = async (req, res) => {
 //--------------------------------------------------------------------------
 export default
   {
+    AddProduct,
     getManagePage,
     ImportLinhkien,
     editStock,

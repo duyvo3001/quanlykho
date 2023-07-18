@@ -91,4 +91,4 @@ const SearchUser = async (req, res) => {
 
   return res.status(200).json({ result: datarender })
 }
-export default {SearchUser, SearchDateProduct, SearchStock, SearchStockExport, SearchCustomer, SearchBrand, SearchWarehouse, SearchInvoice, SearchSupplier }
+export default { SearchUser, SearchDateProduct, SearchStock, SearchStockExport, SearchCustomer, SearchBrand, SearchWarehouse, SearchInvoice, SearchSupplier }
