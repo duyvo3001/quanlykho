@@ -1,21 +1,8 @@
 import connec from '../configs/connectDBmongo.js'
-import data from "../services/renderdataHang";
-const searchfunc = (search) => {
-  var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-  if (format.test(search)) {
-    return true;
-  } else {
-    return false;
-  }
-}
+
 const SearchStock = async (req, res) => {
-  let { search } = req.body.formData;
 
-  if (searchfunc(search)) {
-    return res.status(500).json({ message: 'chứa kí tự đặt biệt' })
-  }
-
-  let datarender = await data.result('Hang', '', search, '', '')
+  let datarender = await connec.getDB().collection("Hang").find({}).toArray();
 
   if (datarender == null) {
     return res.status(500).json({ message: 'null!' })
@@ -94,4 +81,14 @@ const SearchDateProduct = async (req, res) => {
   console.log(datarender);
   return res.status(200).json({ result: datarender })
 }
-export default { SearchDateProduct, SearchStock, SearchStockExport, SearchCustomer, SearchBrand, SearchWarehouse, SearchInvoice, SearchSupplier }
+
+const SearchUser = async (req, res) => {
+  let datarender = await connec.getDB().collection("NhanVien").find({}).toArray();
+
+  if (datarender == null) {
+    return res.status(500).json({ message: 'null!' })
+  }
+
+  return res.status(200).json({ result: datarender })
+}
+export default {SearchUser, SearchDateProduct, SearchStock, SearchStockExport, SearchCustomer, SearchBrand, SearchWarehouse, SearchInvoice, SearchSupplier }
