@@ -54,10 +54,9 @@ let createUser = async (req, res) => {
         NgayTao: Date.now(),
         AccessRight: AccessRight,
       }
-      await model.NhanVienmodel(data)
+      await connec.getDB().collection("NhanVien").insertOne(data)
 
       return res.status(201).json({ message: 'created successfully' });
-
     }
     else console.log("test failed ");
 
