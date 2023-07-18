@@ -29,10 +29,12 @@ const paidProduct = async (req, res) => { // Paid Product
     }
 
     const Resultdata = await connec.getDB().collection("HoaDon").insertOne(dataInvoice)
-    console.info(Resultdata)
+
+    const GetID = await connec.getDB().collection("HoaDon").find({ _id: Resultdata?.insertedId }).toArray()
+
     if (Resultdata.acknowledged == true) {
         updateQty(Render, connec) // update Qty Product
-        return res.status(200).json({ message: "Insertion successful!" });
+        return res.status(200).json({ message: "Insertion successful!" , ID : GetID[0].IDPaidOrder});
     } else {
         return res.status(404).json({ message: "Insertion failed" });
     }
@@ -73,4 +75,4 @@ const DeleteOrder = async (req, res) => {
     await connec.getDB().collection('HoaDon').deleteMany({ IDPaidOrder })
     res.status(200).json({ message: 'delete sucsess' })
 }
-export default { paidProduct, managePaid, getInvoice ,DeleteOrder}
+export default { paidProduct, managePaid, getInvoice, DeleteOrder }
