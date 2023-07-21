@@ -19,7 +19,7 @@ let getInventoryReport = async (req, res) => {
   let datarender = await connec.getDB().collection("Hang").find({
     NgayNhap: { $gte: new Date(item + "-01-01"), $lt: new Date(item + "-12-31") }
   }).toArray();
-  console.log(datarender);
+  console.log(typeof datarender[0]?.NgayNhap);
   // xep du lieu vao thang 1 => thang 12
   // kiem tra hang nhap con hang hay k
 
