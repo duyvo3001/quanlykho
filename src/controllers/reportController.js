@@ -1,7 +1,8 @@
 import connec from '../configs/connectDBmongo.js'
 
 let getInventoryReport = async (req, res) => {
-  const { item } = req.params
+  const { year, Month } = req.params
+
   // let month = {
   //   'January',
   //   'February',
@@ -17,12 +18,21 @@ let getInventoryReport = async (req, res) => {
   // }
   // console.log(req.params);
   let datarender = await connec.getDB().collection("Hang").find({
-    NgayNhap: { $gte: new Date(item + "-01-01"), $lt: new Date(item + "-12-31") }
+    NgayNhap: { $gte: new Date(year + "-" + (Month != 0 ? Month : "01") + "-01"), $lt: new Date(year + "-" + (Month != 0 ? Month : "12") + "-31") }
   }).toArray();
-  console.log(typeof datarender[0]?.NgayNhap);
-  // xep du lieu vao thang 1 => thang 12
-  // kiem tra hang nhap con hang hay k
 
-  res.status(200).json({ result: datarender })
+  const result = datarender
+    .filter((key) => {
+      if (key?.Soluong != 0)
+        return key
+    })
+    .map((key) => {
+      return key
+    })
+
+  // xep du lieu vao thang 1 => thang 12
+  console.log(result)
+
+  res.status(200).json({ result })
 }
 export default { getInventoryReport }

@@ -24,8 +24,10 @@ const paidProduct = async (req, res) => { // Paid Product
 
     const IDPaidOrder = await createIDPaid() // create ID Paid Order
 
+    let  DateTimenow = new Date(Date.now())
+
     let dataInvoice = {
-        IDPaidOrder, IDCustomer, Discount, Product, Date: Date.now()
+        IDPaidOrder, IDCustomer, Discount, Product, Date: DateTimenow.toLocaleString()
     }
 
     const Resultdata = await connec.getDB().collection("HoaDon").insertOne(dataInvoice)

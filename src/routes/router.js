@@ -72,7 +72,7 @@ const initAPIRoute = async (app) => {
         .patch('/editBrand', authenToken, use(manageController.editBrand))
 
         //  ---------------report Controller --------------- 
-        .get('/inventoryReport/:item', use(reportController.getInventoryReport))
+        .get('/inventoryReport/:year/:Month', use(reportController.getInventoryReport))
         // ----------------Search----------------------------
         .get('/SearchDateProduct',use(SearchController.SearchDateProduct ))
         .get('/SearchStock', authenToken, use(SearchController.SearchStock))
