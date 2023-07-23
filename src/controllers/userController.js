@@ -67,22 +67,23 @@ let createUser = async (req, res) => {
 let SignUser = async (req, res) => {
 
   let { user_nv, pass_nv } = req.body.formData;
+  console.log(user_nv, pass_nv);
   let Repassword = "", user_id = '';
   //check special characters
   let format = /[']+/;
   if (format.test(user_nv)) {
-    return res.status(404).json({ eror: "ron", message: 'chứa kí tự k hợp lệ' })
+    return res.status(202).json({ eror: "wrong", message: 'Contains invalid characters' })
   }
 
-  if (user_nv == '' || pass_nv == '')
-    return res.status(404).json({ message: "tài khoản hoặc mật khẩu để trống" })
+  if (user_nv == '' || pass_nv == '' || user_nv == undefined || pass_nv == undefined)
+    return res.status(202).json({ message: "user or password is void" })
 
   const result = await connec.getDB().collection('NhanVien').find({
     USER_NV: user_nv?.trim()
   }).toArray()
 
   if (Object.keys(result).length == 0)
-    return res.status(404).json({ message: 'tài khoản đăng nhập không đúng ' })
+    return res.status(202).json({ message: 'user is blank' })
 
   for (let i = 0; i < Object.keys(result).length; i++) {
     Repassword = result[i].PASSWORD;
@@ -95,14 +96,11 @@ let SignUser = async (req, res) => {
     if (_RePassTest.test_Hash == true) {
       const data = req.body;
       const access_token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '3400s' })
-      console.log(access_token);
       return res.status(200).json({ signin: "oke", access_token })
     }
-
     else {
-      return res.status(404).json({ message: "wrong pass" })
+      return res.status(202).json({ message: "wrong pass" })
     }
-
   }
 }
 
