@@ -65,7 +65,7 @@ const SearchSupplier = async (req, res) => {
 
 const SearchInvoice = async (req, res) => {
 
-  let datarender = await connec.getDB().collection("HoaDon").find({}).toArray();
+  let datarender = await connec.getDB().collection("HoaDon").find({}).sort({ Date: +1 }).toArray();
 
   if (datarender == null) {
     return res.status(500).json({ message: 'null!' })
@@ -91,4 +91,13 @@ const SearchUser = async (req, res) => {
 
   return res.status(200).json({ result: datarender })
 }
-export default { SearchUser, SearchDateProduct, SearchStock, SearchStockExport, SearchCustomer, SearchBrand, SearchWarehouse, SearchInvoice, SearchSupplier }
+const SearchCategory = async (req, res) => {
+  let datarender = await connec.getDB().collection("Category").find({}).toArray();
+
+  if (datarender == null) {
+    return res.status(500).json({ message: 'null!' })
+  }
+
+  return res.status(200).json({ result: datarender })
+}
+export default { SearchCategory, SearchUser, SearchDateProduct, SearchStock, SearchStockExport, SearchCustomer, SearchBrand, SearchWarehouse, SearchInvoice, SearchSupplier }

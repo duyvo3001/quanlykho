@@ -28,6 +28,9 @@ const result = async (kind, key, value, limit, skip) => {
                     case 'HoaDon':
                         query = await connec.getDB().collection(kind).find({ IDPaidOrder: value }).toArray();
                         break;
+                    case 'Category':
+                        query = await connec.getDB().collection(kind).find({ Category: value }).toArray();
+                        break;
                     default:
                         query = await connec.getDB().collection(kind).find({ MaNCC: value }).toArray();
                         break;

@@ -5,11 +5,9 @@ const paidProduct = async (req, res) => { // Paid Product
     let { IDCustomer, Discount } = req.body.formData;
     let { Render } = req.body
 
-    // const getdata = async (data1) => {
-    //     return await data?.result('Hang', '', data1, "", "")
-    // }
     let Product = []
     let _data = []
+    let GrossAmount = 0;
     for (let i = 0; i < Render.length; i++) {
         _data.push(await data?.result('Hang', '', Render[i]?.NameProduct, "", ""))
         Product.push(
@@ -20,14 +18,15 @@ const paidProduct = async (req, res) => { // Paid Product
                 GiaBanLe: await _data[i][0]?.GiaBanLe
             }
         )
+        GrossAmount += Render[i]?.Qty * await _data[i][0]?.GiaBanLe
     }
-
+    let NetAmount = GrossAmount - (GrossAmount * 1 / 10) + (GrossAmount * Discount / 100)
     const IDPaidOrder = await createIDPaid() // create ID Paid Order
 
-    let  DateTimenow = new Date(Date.now())
+    let DateTimenow = new Date(Date.now())
 
     let dataInvoice = {
-        IDPaidOrder, IDCustomer, Discount, Product, Date: DateTimenow.toLocaleString()
+        IDPaidOrder, IDCustomer, Discount, Product, NetAmount, Date: DateTimenow
     }
 
     const Resultdata = await connec.getDB().collection("HoaDon").insertOne(dataInvoice)
@@ -36,7 +35,7 @@ const paidProduct = async (req, res) => { // Paid Product
 
     if (Resultdata.acknowledged == true) {
         updateQty(Render, connec) // update Qty Product
-        return res.status(200).json({ message: "Insertion successful!" , ID : GetID[0].IDPaidOrder});
+        return res.status(200).json({ message: "Insertion successful!", ID: GetID[0].IDPaidOrder });
     } else {
         return res.status(404).json({ message: "Insertion failed" });
     }

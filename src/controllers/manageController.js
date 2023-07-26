@@ -14,10 +14,13 @@ const CheckSpecialCharacters = (arrData) => {
 }
 
 // -------------------------------------linh kien----------------------------------------------------
+let createIdProduct = async (Category, MaThuongHieu) => {
+  return Category + MaThuongHieu + Math.floor(Math.random() * Math.floor(Math.random() * Date.now())).toString(16)
+}
 let ImportLinhkien = async (req, res) => {
 
-  let { MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body.formData;
-  let arrData = [MaLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
+  let { Category, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body.formData;
+  let arrData = [Category, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
 
   //check trống hàng 
   for (let i = 0; i < arrData.length; i++) {
@@ -29,17 +32,11 @@ let ImportLinhkien = async (req, res) => {
   if (e != false)
     return res.status(500).json({ message: 'chứa kí tự đặc biệt', Character: e })
 
-  // kiểm tra trùng lập 
-  let querycheck = await connec.getDB().collection('Hang').find({
-    MaLK
-  }).toArray()
-
-  //check trùng mã nhập hàng 
-  if (Object.keys(querycheck).length == 1)
-    return res.status(500).json({ message: 'trùng mã nhập hàng' })
-
+  let MaLK = await createIdProduct(Category, MaThuongHieu) // create IdProduct
+  console.log(MaLK)
   let data = {
     MaLK,
+    Category,
     TenLK,
     Donvi,
     Soluong,
@@ -49,7 +46,7 @@ let ImportLinhkien = async (req, res) => {
     Color,
     MaKho,
     GiaBanLe,
-    TinhTrangHang,
+    TinhTrangHang: TinhTrangHang || "GOOD",
   }
   try {
     let result = await modelHang.Hangmodel(data)
@@ -87,11 +84,11 @@ let deleteStock = async (req, res) => {
 //post edit item linh kien 
 let editStock = async (req, res) => {
 
-  let { MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang, _id } = req.body.formData;
-  let arrData = [MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
+  let { MaLK, Category, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang, _id } = req.body.formData;
+  let arrData = [MaLK, Category, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
 
   let updateItemStockServices = new UpdateItemStockServices()
-  let updateItem = updateItemStockServices.getTransport({ MaLK, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang })
+  let updateItem = updateItemStockServices.getTransport({ MaLK, Category, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang })
   let fileId = new mongoose.Types.ObjectId(_id);
   //check special characters
   let e = CheckSpecialCharacters(arrData)
@@ -108,9 +105,7 @@ let editStock = async (req, res) => {
     $set: updateItem
   }
   );
-
   return res.status(200).json({ message: "oke" })
-
 }
 let AddProduct = async (req, res) => {
   let { MaLK, Soluong } = req.body.formData;
@@ -152,8 +147,6 @@ let importNCC = async (req, res) => {
 
   if (Object.keys(querycheck).length == 1)
     return res.status(500).json({ message: 'trùng mã nhập hàng' })
-
-
 
   try {
     let data = {
@@ -230,7 +223,7 @@ let importThuongHieu = async (req, res) => {
     return res.status(500).json({ message: 'trùng mã nhập hàng' })
 
   try {
-    let data = { MaThuongHieu, TenThuongHieu, NgayNhap: Date.now() }
+    let data = { MaThuongHieu: MaThuongHieu.trim(), TenThuongHieu, NgayNhap: Date.now() }
     let result = await modelThuongHieu.ThuongHieumodel(data)
 
     if (result.acknowledged === true) {
@@ -246,6 +239,7 @@ let importThuongHieu = async (req, res) => {
 let deleteBrand = async (req, res) => {
   let MaThuongHieu = req.params.item
   let Resultdata = await connec.getDB().collection('ThuongHieu').deleteMany({ MaThuongHieu })
+
   if (Resultdata.acknowledged == true && Resultdata.deletedCount == 1) {
     return res.status(200).json({ message: 'oke' });
   }

@@ -19,9 +19,11 @@ class Warehouse {
     }
 }
 class Stock {
-    constructor({ MaLK, TenLK, Donvi, Soluong, MaThuongHieu, MaNCC, Color, MaKho, GiaBanLe, TinhTrangHang }) {
+    constructor({ MaLK, Category, TenLK, Donvi, Soluong, MaThuongHieu, MaNCC, Color, MaKho, GiaBanLe, TinhTrangHang }) {
         if (MaLK)
             this.MaLK = MaLK
+        if (Category)
+            this.Category = Category
         if (TenLK)
             this.TenLK = TenLK
         if (Donvi)
@@ -65,7 +67,6 @@ class Customer {
 }
 class User {
     constructor({ MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, SDT, Email, DiaChi, accessrights }) {
-        console.info(pass_nv)
         if (MaNV)
             this.MaNV = MaNV
         if (TenNV)

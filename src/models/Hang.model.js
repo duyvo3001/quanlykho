@@ -4,7 +4,9 @@ import Joi from 'joi';
 const Hangcollection = 'Hang'
 const HangSchema = Joi.object({
 
-    MaLK: Joi.string().alphanum().min(3).max(50).required(),
+    MaLK: Joi.string().min(3).max(50).required(),
+
+    Category: Joi.string().min(1).max(50).required(),
 
     TenLK: Joi.string().min(3).max(200).required(),
 

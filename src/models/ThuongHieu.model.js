@@ -4,7 +4,7 @@ import Joi from 'joi';
 const ThuongHieucollection ='ThuongHieu'
 const ThuongHieuSchema = Joi.object({
 
-    MaThuongHieu: Joi.string().alphanum().min(3).max(50).required(),
+    MaThuongHieu: Joi.string().min(3).max(50).required(),
 
     TenThuongHieu: Joi.string().min(2).max(50).required(),
 

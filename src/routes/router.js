@@ -7,6 +7,7 @@ import SearchController from '../controllers/SearchController';
 import CustomerController from '../controllers/CustomerController';
 import WareHouseController from '../controllers/WareHouseController';
 import PaidProductController from '../controllers/PaidProductController';
+import CategoryController from '../controllers/CategoryController';
 const dotenv = require('dotenv');
 dotenv.config();
 let router = express.Router();
@@ -17,9 +18,10 @@ const use = fn => (req, res, next) =>
 
 // mideware authentoken handler
 const authenToken = (req, res, next) => {
-    const token = req.headers['authorization']
+    const token = req.headers?.authorization
 
-    if (!token) return res.status(401).json({ message: 'k co token' })
+    if (!token)
+        return res.status(401).json({ message: 'k co token' })
 
     jwt.verify(token, process.env.ACCESS_TOKEN, (err, data) => {
         if (err) { return res.status(401).json({ message: 'sai token' }) }
@@ -34,6 +36,9 @@ const initAPIRoute = async (app) => {
         .post('/importWarehouse', authenToken, use(WareHouseController.importWarehouse))
         .patch('/UpdateWarehouse', authenToken, use(WareHouseController.editWarehouse))
         .post('/deleteWarehouse/:item', authenToken, use(WareHouseController.deleteWarehouse))
+        //-----------------WareHouse Controller----------------
+        .get('/CategoryPage/:pageIndex', authenToken, use(CategoryController.getCategory))
+        .post('/importCategory', authenToken, use(CategoryController.ImportCategory))
         //-----------------Customer Controller----------------
         .get('/CustomerPage/:pageIndex', authenToken, use(CustomerController.CustomerPage))
         .post('/ImportCustomer', authenToken, use(CustomerController.importCustomer))
@@ -72,9 +77,11 @@ const initAPIRoute = async (app) => {
         .patch('/editBrand', authenToken, use(manageController.editBrand))
 
         //  ---------------report Controller --------------- 
-        .get('/inventoryReport/:year/:Month', use(reportController.getInventoryReport))
+        .post('/inventoryReport', use(reportController.getInventoryReport))
+        .get('/OutofStock/:year/:Month', use(reportController.getOutofStock))
+        .get('/SaleReport/:year/:Month', use(reportController.getSaleReport))
         // ----------------Search----------------------------
-        .get('/SearchDateProduct',use(SearchController.SearchDateProduct ))
+        .get('/SearchDateProduct', use(SearchController.SearchDateProduct))
         .get('/SearchStock', authenToken, use(SearchController.SearchStock))
         .get('/SearchCustomer', authenToken, use(SearchController.SearchCustomer))
         .get('/SearchStockExport', authenToken, use(SearchController.SearchStockExport))
@@ -83,6 +90,7 @@ const initAPIRoute = async (app) => {
         .get('/SearchSupplier', authenToken, use(SearchController.SearchSupplier))
         .get('/SearchInvoice', authenToken, use(SearchController.SearchInvoice))
         .get('/SearchUser', authenToken, use(SearchController.SearchUser))
+        .get('/SearchCategory', authenToken, use(SearchController.SearchCategory))
     return app.use("/", router);
 }
 export default initAPIRoute  

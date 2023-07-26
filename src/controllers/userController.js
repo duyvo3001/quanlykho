@@ -95,7 +95,7 @@ let SignUser = async (req, res) => {
 
     if (_RePassTest.test_Hash == true) {
       const data = req.body;
-      const access_token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '3400s' })
+      const access_token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '10h' })
       return res.status(200).json({ signin: "oke", access_token })
     }
     else {
