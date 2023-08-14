@@ -20,17 +20,19 @@ let createIdProduct = async (Category, MaThuongHieu) => {
 let ImportLinhkien = async (req, res) => {
 
   let { Category, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body.formData;
-  let arrData = [Category, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang];
-
-  //check trống hàng 
+  let arrData = [Category, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe];
+  console.log(arrData);
+  //check null product
   for (let i = 0; i < arrData.length; i++) {
-    if (arrData[i] == '') return res.status(500).json({ message: 'không để trống hàng', Character: e })
+    if (arrData[i] == '' || arrData[i] == undefined) {
+      return res.status(500).json({ message: 'form can not empty', Character: e })
+    }
   }
 
   //check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
-    return res.status(500).json({ message: 'chứa kí tự đặc biệt', Character: e })
+    return res.status(500).json({ message: 'contains special characters', Character: e })
 
   let MaLK = await createIdProduct(Category, MaThuongHieu) // create IdProduct
   console.log(MaLK)
@@ -50,7 +52,7 @@ let ImportLinhkien = async (req, res) => {
   }
   try {
     let result = await modelHang.Hangmodel(data)
-    console.log(result);
+
     if (result.acknowledged === true) {
       return res.status(200).json({ message: 'Create product success' });
     }
@@ -207,9 +209,9 @@ let getThuongHieupage = async (req, res) => { // render page import
   res.status(200).json({ result: await data.result('ThuongHieu', 'renderData', '', limit, skip) });
 }
 let importThuongHieu = async (req, res) => {
-  let { MaThuongHieu, TenThuongHieu } = req.body.formData;
+  let { MaThuongHieu } = req.body.formData;
   //check special characters
-  let arrData = [MaThuongHieu, TenThuongHieu]
+  let arrData = [MaThuongHieu]
 
   let e = CheckSpecialCharacters(arrData)
   if (e != false) return res.status(200).json({ error: 'chứa kí tự đặc biệt', Character: e })
@@ -223,7 +225,7 @@ let importThuongHieu = async (req, res) => {
     return res.status(500).json({ message: 'trùng mã nhập hàng' })
 
   try {
-    let data = { MaThuongHieu: MaThuongHieu.trim(), TenThuongHieu, NgayNhap: Date.now() }
+    let data = { MaThuongHieu: MaThuongHieu.trim(), NgayNhap: Date.now() }
     let result = await modelThuongHieu.ThuongHieumodel(data)
 
     if (result.acknowledged === true) {
@@ -248,14 +250,14 @@ let deleteBrand = async (req, res) => {
   }
 }
 let editBrand = async (req, res) => {
-  let { MaThuongHieu, TenThuongHieu, _id } = req.body.formData;
+  let { MaThuongHieu, _id } = req.body.formData;
 
   let updateItemBrandServices = new UpdateItemBrandServices()
-  let updateItem = updateItemBrandServices.getTransport({ MaThuongHieu, TenThuongHieu })
+  let updateItem = updateItemBrandServices.getTransport({ MaThuongHieu })
   console.log(updateItem)
   let fileId = new mongoose.Types.ObjectId(_id);
 
-  let arrData = [MaThuongHieu, TenThuongHieu]
+  let arrData = [MaThuongHieu]
 
   //check special characters
   let e = CheckSpecialCharacters(arrData)

@@ -2,12 +2,10 @@ import connec from '../configs/connectDBmongo.js'
 import data from "../services/renderdataHang";
 
 const paidProduct = async (req, res) => { // Paid Product 
-    let { IDCustomer, Discount } = req.body.formData;
+    let { IDCustomer } = req.body.formData;
     let { Render } = req.body
-
     let Product = []
     let _data = []
-    let GrossAmount = 0;
     for (let i = 0; i < Render.length; i++) {
         _data.push(await data?.result('Hang', '', Render[i]?.NameProduct, "", ""))
         Product.push(
@@ -15,23 +13,20 @@ const paidProduct = async (req, res) => { // Paid Product
                 IDProduct: Render[i]?.NameProduct,
                 NameProduct: await _data[i][0]?.TenLK,
                 Qty: Render[i]?.Qty,
-                GiaBanLe: await _data[i][0]?.GiaBanLe
             }
         )
-        GrossAmount += Render[i]?.Qty * await _data[i][0]?.GiaBanLe
     }
-    let NetAmount = GrossAmount - (GrossAmount * 1 / 10) + (GrossAmount * Discount / 100)
-    const IDPaidOrder = await createIDPaid() // create ID Paid Order
+    const IDPaidOrder = await createIDPaid() // create ID Export Order
 
     let DateTimenow = new Date(Date.now())
 
     let dataInvoice = {
-        IDPaidOrder, IDCustomer, Discount, Product, NetAmount, Date: DateTimenow
+        IDPaidOrder, IDCustomer, Product, Date: DateTimenow
     }
 
-    const Resultdata = await connec.getDB().collection("HoaDon").insertOne(dataInvoice)
+    const Resultdata = await connec.getDB().collection("Export").insertOne(dataInvoice)
 
-    const GetID = await connec.getDB().collection("HoaDon").find({ _id: Resultdata?.insertedId }).toArray()
+    const GetID = await connec.getDB().collection("Export").find({ _id: Resultdata?.insertedId }).toArray()
 
     if (Resultdata.acknowledged == true) {
         updateQty(Render, connec) // update Qty Product
@@ -39,7 +34,6 @@ const paidProduct = async (req, res) => { // Paid Product
     } else {
         return res.status(404).json({ message: "Insertion failed" });
     }
-    // return res.status(200).json()
 }
 
 const updateQty = async (Render, connec) => { // update Qty of Product 
@@ -64,16 +58,16 @@ const managePaid = async (req, res) => {
     const pageIndex = req.params.pageIndex || 1;
     const limit = 16;
     const skip = (pageIndex - 1) * limit;
-    return res.status(200).json({ result: await data.result('HoaDon', 'renderData', '', limit, skip) });
+    return res.status(200).json({ result: await data.result('Export', 'renderData', '', limit, skip) });
 }
 
 const getInvoice = async (req, res) => {
     const invoice = req.params.invoice
-    return res.status(200).json({ result: await data.result('HoaDon', '', invoice, '', '', '') })
+    return res.status(200).json({ result: await data.result('Export', '', invoice, '', '', '') })
 }
 const DeleteOrder = async (req, res) => {
     const IDPaidOrder = req.params.item
-    await connec.getDB().collection('HoaDon').deleteMany({ IDPaidOrder })
+    await connec.getDB().collection('Export').deleteMany({ IDPaidOrder })
     res.status(200).json({ message: 'delete sucsess' })
 }
 export default { paidProduct, managePaid, getInvoice, DeleteOrder }

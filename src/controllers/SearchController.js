@@ -65,7 +65,7 @@ const SearchSupplier = async (req, res) => {
 
 const SearchInvoice = async (req, res) => {
 
-  let datarender = await connec.getDB().collection("HoaDon").find({}).sort({ Date: +1 }).toArray();
+  let datarender = await connec.getDB().collection("Export").find({}).sort({ Date: +1 }).toArray();
 
   if (datarender == null) {
     return res.status(500).json({ message: 'null!' })

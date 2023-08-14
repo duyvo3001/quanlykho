@@ -51,7 +51,7 @@ const initAPIRoute = async (app) => {
         .post('/deleteUser/:item', authenToken, use(userController.deleteUser))
         .patch('/updateUser', authenToken, use(userController.updateUser))
         .post('/signin', use(userController.SignUser))
-        // ----------------Paid Order----------------------------------
+        // ----------------Export Order----------------------------------
         .post('/PaidOrder', authenToken, use(PaidProductController.paidProduct))
         .post('/DeleteOrder/:item', authenToken, use(PaidProductController.DeleteOrder))
         .get('/getInvoice/:invoice', authenToken, use(PaidProductController.getInvoice))
@@ -79,7 +79,9 @@ const initAPIRoute = async (app) => {
         //  ---------------report Controller --------------- 
         .post('/inventoryReport', use(reportController.getInventoryReport))
         .get('/OutofStock/:year/:Month', use(reportController.getOutofStock))
-        .get('/SaleReport/:year/:Month', use(reportController.getSaleReport))
+        .get('/SaleReport/:year', use(reportController.getSaleReport))
+        .get('/CategoryReport/:year', use(reportController.CategoryReport))
+        .get('/BrandReport/:year', use(reportController.BrandReport))
         // ----------------Search----------------------------
         .get('/SearchDateProduct', use(SearchController.SearchDateProduct))
         .get('/SearchStock', authenToken, use(SearchController.SearchStock))
