@@ -78,7 +78,7 @@ const initAPIRoute = async (app) => {
 
         //  ---------------report Controller --------------- 
         .post('/inventoryReport', use(reportController.getInventoryReport))
-        .get('/OutofStock/:year/:Month', use(reportController.getOutofStock))
+        .post('/OutofStock', use(reportController.getOutofStock))
         .get('/SaleReport/:year', use(reportController.getSaleReport))
         .get('/CategoryReport/:year', use(reportController.CategoryReport))
         .get('/BrandReport/:year', use(reportController.BrandReport))

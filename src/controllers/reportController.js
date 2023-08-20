@@ -28,14 +28,18 @@ let getInventoryReport = async (req, res) => {
 }
 
 let getOutofStock = async (req, res) => {
-  const { year, Month } = req.params
+  const { MaLK, Category, MaThuongHieu, MaKho, TinhTrangHang } = req.body.formData
+  let { TenLK, MaNCC, Color, Donvi, Soluong, GiaBanLe } = ""
 
-  let datarender = await connec.getDB().collection("Hang").find({
-    NgayNhap: {
-      $gte: new Date(year + "-" + (Month != 0 ? Month : "01") + "-01"),
-      $lt: new Date(year + "-" + (Month != 0 ? Month : "12") + "-31")
-    }
-  }).sort({ NgayNhap: -1 }).toArray();
+  let updateItemStockServices = new UpdateItemStockServices()
+  let updateItem = updateItemStockServices.getTransport(
+    {
+      MaLK, Category, TenLK, MaThuongHieu, MaNCC,
+      Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang
+    })
+
+  let datarender = await connec.getDB().collection("Hang").find(updateItem)
+    .sort({ NgayNhap: -1 }).toArray();
 
   const result = datarender
     .filter((key) => {
@@ -45,7 +49,6 @@ let getOutofStock = async (req, res) => {
     .map((key) => {
       return key
     })
-
   res.status(200).json({ result })
 }
 
