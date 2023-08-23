@@ -8,6 +8,7 @@ import CustomerController from '../controllers/CustomerController';
 import WareHouseController from '../controllers/WareHouseController';
 import PaidProductController from '../controllers/PaidProductController';
 import CategoryController from '../controllers/CategoryController';
+import DashBoardController from '../controllers/DashboardController';
 const dotenv = require('dotenv');
 dotenv.config();
 let router = express.Router();
@@ -93,6 +94,9 @@ const initAPIRoute = async (app) => {
         .get('/SearchInvoice', authenToken, use(SearchController.SearchInvoice))
         .get('/SearchUser', authenToken, use(SearchController.SearchUser))
         .get('/SearchCategory', authenToken, use(SearchController.SearchCategory))
+        // ----------------Dash----------------------------
+        .get('/Dashboard', authenToken, use(DashBoardController.DashBoard))
+
     return app.use("/", router);
 }
 export default initAPIRoute  
