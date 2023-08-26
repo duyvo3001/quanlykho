@@ -9,26 +9,10 @@ import WareHouseController from '../controllers/WareHouseController';
 import PaidProductController from '../controllers/PaidProductController';
 import CategoryController from '../controllers/CategoryController';
 import DashBoardController from '../controllers/DashboardController';
+import {use ,authenToken} from "../middleware/JwtAction"
 const dotenv = require('dotenv');
 dotenv.config();
 let router = express.Router();
-
-// mideware error handler
-const use = fn => (req, res, next) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
-
-// mideware authentoken handler
-const authenToken = (req, res, next) => {
-    const token = req.headers?.authorization
-
-    if (!token)
-        return res.status(401).json({ message: 'k co token' })
-
-    jwt.verify(token, process.env.ACCESS_TOKEN, (err, data) => {
-        if (err) { return res.status(401).json({ message: 'sai token' }) }
-        next();
-    })
-}
 
 const initAPIRoute = async (app) => {
     router
