@@ -50,20 +50,19 @@ let ImportLinhkien = async (req, res) => {
     GiaBanLe,
     TinhTrangHang: TinhTrangHang || "GOOD",
   }
-  return res.status(200).json({ message: 'Create product success' });
 
-  // try {
-  //   let result = await modelHang.Hangmodel(data)
+  try {
+    let result = await modelHang.Hangmodel(data)
 
-  //   if (result.acknowledged === true) {
-  //     return res.status(202).json({ message: 'Create product success' });
-  //   }
-  //   else {
-  //     return res.status(500).json({ message: `Can not create product` })
-  //   }
-  // } catch (error) {
-  //   return res.status(500).json({ message: `Can not create product` })
-  // }
+    if (result.acknowledged === true) {
+      return res.status(202).json({ message: 'Create product success' });
+    }
+    else {
+      return res.status(500).json({ message: `Can not create product` })
+    }
+  } catch (error) {
+    return res.status(500).json({ message: `Can not create product` })
+  }
 }
 //render page linh kien
 let getManagePage = async (req, res) => {
