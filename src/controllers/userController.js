@@ -53,9 +53,8 @@ let createUser = async (req, res) => {
 
       return res.status(201).json({ message: 'created successfully' });
     }
-    else console.log("test failed ");
-
-    return res.status(400).json({ message: 'failed' });
+    else
+      return res.status(400).json({ message: 'failed' });
   }
 }
 
@@ -104,6 +103,7 @@ let updateUser = async (req, res) => {
   let {
     MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, _id
   } = req.body.formData;
+
   let arrData = [MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi];
 
   //check special characters
@@ -134,7 +134,6 @@ let updateUser = async (req, res) => {
     $set: updateItem
   }
   );
-
   return res.status(200).json({ message: "oke" })
 }
 
