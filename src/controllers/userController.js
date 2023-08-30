@@ -142,7 +142,7 @@ let updateUser = async (req, res) => {
   if (updateUser.acknowledged == true)
     return res.status(200).json({ message: "oke" })
   else
-    return res.status(500).json({ message: "eror" })
+    return res.status(500).json({ message: "eror undefind" })
 }
 
 
