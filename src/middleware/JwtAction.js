@@ -9,7 +9,7 @@ const use = fn => (req, res, next) =>
 // middleware authentoken handler
 const authenToken = (req, res, next) => {
     const token = req.headers?.authorization
-
+    console.info(token)
     if (!token)
         return res.status(401).json({ message: 'k co token' })
 
@@ -17,6 +17,9 @@ const authenToken = (req, res, next) => {
         if (err) { return res.status(401).json({ message: 'sai token' }) }
         next();
     })
+
+    const test = jwt.verify(token, process.env.ACCESS_TOKEN)
+    console.info(test)
 }
 
 module.exports = {
