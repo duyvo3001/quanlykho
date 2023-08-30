@@ -12,15 +12,16 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const port = process.env.PORT || 3000;
-let rfs = require("rotating-file-stream"); // version 2.x
+// let rfs = require("rotating-file-stream");
 
-let accessLogStream = rfs.createStream("access.log", {
-  size: "10M",
-  interval: "1d",
-  compress: "gzip",
-});
+// let accessLogStream = rfs.createStream("access.log", {
+//   size: "10M",
+//   interval: "1d",
+//   compress: "gzip",
+// });
 const isProduction = process.env.ENV === "production";
 const app = express();
+
 // boot server
 app.use(function (req, res, next) {
 
@@ -39,6 +40,7 @@ app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
+
 connectionDBMG
   .connectMGDB(process.env.MONGO_URL)
   .then(() => console.log("connec db successfully"))
@@ -52,7 +54,8 @@ const bootserver = () => {
   app
     .use(
       isProduction
-        ? morgan("combined", { stream: accessLogStream })
+        // ? morgan("combined", { stream: accessLogStream })
+        ? morgan("combined")
         : morgan("dev")
     )
     .use(helmet()) // protect nodejs

@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
 // tạo hash
-const _pass = (pass,re_pass) =>{
+const _pass = (pass) =>{
     let createpass ={
         hash :  bcrypt.hashSync(pass, salt),
         // re_hash : bcrypt.hashSync(re_pass, saltRounds)

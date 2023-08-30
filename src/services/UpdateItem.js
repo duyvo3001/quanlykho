@@ -66,7 +66,7 @@ class Customer {
     }
 }
 class User {
-    constructor({ MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, SDT, Email, DiaChi, accessrights }) {
+    constructor({ MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, PASSWORD, SDT, Email, DiaChi, accessrights }) {
         if (MaNV)
             this.MaNV = MaNV
         if (TenNV)
@@ -77,8 +77,8 @@ class User {
             this.GioiTinh = GioiTinh
         if (USER_NV)
             this.USER_NV = USER_NV
-        if (pass_nv)
-            this.pass_nv = pass_nv
+        if (PASSWORD)
+            this.PASSWORD = PASSWORD
         if (SDT)
             this.SDT = SDT
         if (Email)

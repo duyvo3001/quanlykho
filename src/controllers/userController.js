@@ -61,8 +61,9 @@ let createUser = async (req, res) => {
 let SignUser = async (req, res) => {
 
   let { user_nv, pass_nv } = req.body.formData;
-  console.log(user_nv, pass_nv);
+  console.log(user_nv, pass_nv)
   let Repassword = "", user_id = '';
+
   //check special characters
   let format = /[']+/;
   if (format.test(user_nv)) {
@@ -90,7 +91,7 @@ let SignUser = async (req, res) => {
     if (_RePassTest.test_Hash == true) {
       const data = req.body;
       const access_token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '10h' })
-      return res.status(200).json({ signin: "oke", access_token })
+      return res.status(200).json({ signin: "oke", access_token, _id: result[0]._id })
     }
     else {
       return res.status(202).json({ message: "wrong pass" })
@@ -99,11 +100,10 @@ let SignUser = async (req, res) => {
 }
 
 let updateUser = async (req, res) => {
-
   let {
     MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, _id
   } = req.body.formData;
-
+  console.log(req.body.formData)
   let arrData = [MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi];
 
   //check special characters
@@ -116,26 +116,35 @@ let updateUser = async (req, res) => {
   if (Object.keys(querycheck).length == 1)
     return res.status(404).json({ message: 'trùng mã nhân viên' })
 
-  let _Pass = _pass(pass_nv, repass_nv);
+  let Password
+  if (pass_nv) {
+    let _Pass = _pass(pass_nv);
+    Password = _Pass.createpass.hash
+  }
 
   let UpdateuserServices = new UpdateUserServices()
 
   let updateItem = UpdateuserServices.getTransport(
     {
       MaNV, TenNV, NgaySinh, GioiTinh, USER_NV,
-      pass_nv: _Pass.createpass.hash, SDT, Email, DiaChi,
+      PASSWORD: Password, SDT, Email, DiaChi,
       accessrights: req.body.AccessRight
     }
   )
+
   let fileId = new mongoose.Types.ObjectId(_id);
 
-  await connec.getDB().collection('NhanVien').updateOne(
+  const updateUser = await connec.getDB().collection('NhanVien').updateOne(
     { _id: fileId }, {
     $set: updateItem
   }
-  );
-  return res.status(200).json({ message: "oke" })
+  )
+  if (updateUser.acknowledged == true)
+    return res.status(200).json({ message: "oke" })
+  else
+    return res.status(500).json({ message: "eror" })
 }
+
 
 let deleteUser = async (req, res) => {
   let MaNV = req.params.item

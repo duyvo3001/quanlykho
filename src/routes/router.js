@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import express from 'express';
 import userController from '../controllers/userController';
 import manageController from '../controllers/manageController';
