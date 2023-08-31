@@ -4,9 +4,16 @@ const use = fn => (req, res, next) =>
     Promise.resolve(fn(req, res, next)).catch(next);
 
 //create middleware access right handler
-const AccessHandler = (req, res, next) => {
-    const test = jwt.verify(token, process.env.ACCESS_TOKEN)
-    console.info(test)
+const AccessHandler = (type, action) => {
+    return (req, res, next) => {
+        const token = req.headers?.authorization
+        const data = jwt.verify(token, process.env.ACCESS_TOKEN)
+        // console.log(data)
+        if (data?.accessrights?.[type]?.[action] == false) {
+            return res.status(403).json({ message: "not allowed" })
+        }
+        next()
+    }
 }
 
 // middleware authentoken handler
@@ -24,5 +31,5 @@ const authenToken = (req, res, next) => {
 }
 
 module.exports = {
-    use, authenToken
+    use, authenToken, AccessHandler
 }

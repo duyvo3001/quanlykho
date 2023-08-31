@@ -90,9 +90,13 @@ let SignUser = async (req, res) => {
     let _RePassTest = test_pass(pass_nv.trim(), Repassword.trim());
 
     if (_RePassTest.test_Hash == true) {
-      const data = { accessrights, user_id };
-      const access_token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '10h' })
-      return res.status(200).json({ signin: "oke", access_token, _id: result[0]._id })
+      try {
+        const data = { accessrights, user_id };
+        const access_token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '10h' })
+        return res.status(200).json({ signin: "oke", access_token, _id: result[0]._id })
+      } catch (error) {
+        return res.status(500)
+      }
     }
     else {
       return res.status(202).json({ message: "wrong pass" })
