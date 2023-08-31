@@ -62,7 +62,7 @@ let SignUser = async (req, res) => {
 
   let { user_nv, pass_nv } = req.body.formData;
   console.log(user_nv, pass_nv)
-  let Repassword = "", user_id = '';
+  let Repassword = "", user_id = '', accessrights = {};
 
   //check special characters
   let format = /[']+/;
@@ -83,13 +83,14 @@ let SignUser = async (req, res) => {
   for (let i = 0; i < Object.keys(result).length; i++) {
     Repassword = result[i].PASSWORD;
     user_id = result[i].MaNV;
+    accessrights = result[i]?.Accessright
   }
 
   if (Object.keys(result).length == 1) {
     let _RePassTest = test_pass(pass_nv.trim(), Repassword.trim());
 
     if (_RePassTest.test_Hash == true) {
-      const data = req.body;
+      const data = { accessrights, user_id };
       const access_token = jwt.sign(data, process.env.ACCESS_TOKEN, { expiresIn: '10h' })
       return res.status(200).json({ signin: "oke", access_token, _id: result[0]._id })
     }
@@ -103,7 +104,7 @@ let updateUser = async (req, res) => {
   let {
     MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, _id
   } = req.body.formData;
-  console.log(req.body.formData)
+
   let arrData = [MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi];
 
   //check special characters

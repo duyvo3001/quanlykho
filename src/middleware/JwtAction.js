@@ -9,7 +9,7 @@ const use = fn => (req, res, next) =>
 // middleware authentoken handler
 const authenToken = (req, res, next) => {
     const token = req.headers?.authorization
-    console.info(token)
+    // console.info(token)
     if (!token)
         return res.status(401).json({ message: 'k co token' })
 
