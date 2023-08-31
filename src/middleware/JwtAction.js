@@ -4,7 +4,10 @@ const use = fn => (req, res, next) =>
     Promise.resolve(fn(req, res, next)).catch(next);
 
 //create middleware access right handler
-
+const AccessHandler = (req, res, next) => {
+    const test = jwt.verify(token, process.env.ACCESS_TOKEN)
+    console.info(test)
+}
 
 // middleware authentoken handler
 const authenToken = (req, res, next) => {
@@ -18,8 +21,6 @@ const authenToken = (req, res, next) => {
         next();
     })
 
-    const test = jwt.verify(token, process.env.ACCESS_TOKEN)
-    console.info(test)
 }
 
 module.exports = {
