@@ -8,8 +8,8 @@ const AccessHandler = (type, action) => {
     return (req, res, next) => {
         const token = req.headers?.authorization
         const data = jwt.verify(token, process.env.ACCESS_TOKEN)
-        // console.log(data)
-        if (data?.accessrights?.[type]?.[action] == false) {
+        const dataAccess = data?.accessrights?.[type]?.[action]
+        if (dataAccess == false || dataAccess == undefined) {
             return res.status(403).json({ message: "not allowed" })
         }
         next()

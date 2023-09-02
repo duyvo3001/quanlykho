@@ -1,12 +1,13 @@
-import { MongoClient , ServerApiVersion } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 
 let dbInstance = null
 const connectMGDB = async (url) => {
     const client = new MongoClient(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        serverApi: ServerApiVersion.v1 
-    })
+        serverApi: ServerApiVersion.v1,
+    }, { connectTimeoutMS: 30000 },
+        { keepAlive: 1 })
 
     client.connect()
 
@@ -17,5 +18,5 @@ const getDB = () => {
     return dbInstance
 }
 
-export default {connectMGDB,getDB};
+export default { connectMGDB, getDB };
 
