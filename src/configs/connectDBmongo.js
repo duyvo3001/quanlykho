@@ -13,6 +13,7 @@ const connectMGDB = async (url) => {
 
     dbInstance = client.db('qllk')
 }
+
 const getDB = () => {
     if (!dbInstance) throw new Error('disconnnection failed');
     return dbInstance

@@ -4,7 +4,6 @@ import connec from '../configs/connectDBmongo.js'
 
 let ImportCategory = async (req, res) => {
   let { IDcategory } = req.body.formData
-
   let querycheck = await connec.getDB().collection('Hang').find({
     Category: IDcategory
   }).toArray()

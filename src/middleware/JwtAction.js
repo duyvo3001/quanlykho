@@ -1,14 +1,11 @@
 import jwt from 'jsonwebtoken';
 
-const use = fn => (req, res, next) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
-
-//create middleware access right handler
-const AccessHandler = (type, action) => {
+const AccessHandler = (type, action) => {//create middleware access right handler
     return (req, res, next) => {
         const token = req.headers?.authorization
         const data = jwt.verify(token, process.env.ACCESS_TOKEN)
         const dataAccess = data?.accessrights?.[type]?.[action]
+
         if (dataAccess == false || dataAccess == undefined) {
             return res.status(403).json({ message: "not allowed" })
         }
@@ -16,8 +13,7 @@ const AccessHandler = (type, action) => {
     }
 }
 
-// middleware authentoken handler
-const authenToken = (req, res, next) => {
+const authenToken = (req, res, next) => {// middleware authentoken handler
     const token = req.headers?.authorization
     // console.info(token)
     if (!token)
@@ -31,5 +27,5 @@ const authenToken = (req, res, next) => {
 }
 
 module.exports = {
-    use, authenToken, AccessHandler
+    authenToken, AccessHandler
 }
