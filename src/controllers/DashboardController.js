@@ -45,7 +45,7 @@ let DashBoard = async (req, res) => {
     Inventory
         .filter((key) => {
             if (key?.Soluong != 0) {
-                QuantityInventory += key?.Soluong
+                QuantityInventory +=  Number(key?.Soluong)
                 return key
             }
         })

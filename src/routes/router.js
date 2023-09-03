@@ -10,7 +10,7 @@ import { RouterProduct } from './product.Route';
 import { RouterSearch } from './search.Route';
 import { RouterSupplier } from './supplier.Route';
 import { RouterBrand } from './brand.Route';
-
+import { RouterReport } from './report.Route';
 const dotenv = require('dotenv');
 dotenv.config();
 let router = express.Router();
@@ -31,6 +31,7 @@ const initAPIRoute = async (app) => {
     RouterSearch(router,authenToken, AccessHandler, use)
     RouterSupplier(router,authenToken, AccessHandler, use)
     RouterBrand(router,authenToken, AccessHandler, use) 
+    RouterReport(router,authenToken, AccessHandler, use)
     return app.use("/", router);
 }
 export default initAPIRoute  

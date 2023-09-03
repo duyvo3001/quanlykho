@@ -1,5 +1,5 @@
 import reportController from '../controllers/reportController'
-export const RouterReport = () =>
+export const RouterReport = (router,authenToken, AccessHandler, use) =>
     router.post('/inventoryReport', use(reportController.getInventoryReport))//read
         .post('/OutofStock', use(reportController.getOutofStock))//read
         .get('/SaleReport/:year', use(reportController.getSaleReport))//read
