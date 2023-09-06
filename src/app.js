@@ -12,13 +12,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const port = process.env.PORT || 3000;
-// let rfs = require("rotating-file-stream");
 
-// let accessLogStream = rfs.createStream("access.log", {
-//   size: "10M",
-//   interval: "1d",
-//   compress: "gzip",
-// });
 const isProduction = process.env.ENV === "production";
 const app = express();
 
