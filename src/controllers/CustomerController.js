@@ -39,9 +39,7 @@ let importCustomer = async (req, res) => {
 
     //check trùng mã nhập hàng 
     if (Object.keys(querycheck).length == 1)
-        return res.status(200).json('message', 'oke');
-
-
+        return res.status(404).json('message', 'same id');
 
     try {
         let data = {
@@ -65,7 +63,7 @@ let UpdateCustomer = async (req, res) => {
     let { _id, IDCustomer, NameCustomer, Phone, Email } = req.body.formData
 
     let arrData = [IDCustomer, NameCustomer, Phone, Email]
-    console.log(arrData);
+
     let updateCustomerServices = new UpdateCustomerServices()
     let updateCus = updateCustomerServices.getTransport({ IDCustomer, NameCustomer, Phone, Email })
     console.log(updateCus)
