@@ -6,3 +6,4 @@ export const RouterLogin = (router, authenToken, AccessHandler, use) =>
         .post('/deleteUser/:item', authenToken, AccessHandler("User", "delete"), use(userController.deleteUser))//delete
         .patch('/updateUser', authenToken, AccessHandler("User", "update"), use(userController.updateUser))//update
         .post('/signin', use(userController.SignUser))
+        .get('/getInfoUser/:id', authenToken, AccessHandler("User", "read"), use(userController.getInfoUser))//read

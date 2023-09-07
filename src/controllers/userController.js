@@ -13,6 +13,12 @@ const CheckSpecialCharacters = (arrData) => {
   if (checkArr.length > 0) { return checkArr }
   else return false;
 }
+
+let getInfoUser  = async (req, res) => {
+  const _id = req.params.id 
+  res.status(200).json({ result: await data.result('NhanVien', '', _id, "", "") });
+}
+
 let getStaffPage = async (req, res) => {
   const pageIndex = req.params.pageIndex || 1;
   const limit = 16;
@@ -106,12 +112,11 @@ let SignUser = async (req, res) => {
 
 let updateUser = async (req, res) => {
   let {
-    MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, _id
+    MaNV, TenNV, NgaySinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, _id
   } = req.body.formData;
-
-  let arrData = [MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi];
-
-  //check special characters
+  let GioiTinh = req.body.Sex
+  let arrData = [MaNV, TenNV, NgaySinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi];
+  // check special characters
   let e = CheckSpecialCharacters(arrData)
   if (e != false)
     return res.status(404).json({ error: 'chứa kí tự đặc biệt', Character: e })
@@ -133,7 +138,7 @@ let updateUser = async (req, res) => {
     {
       MaNV, TenNV, NgaySinh, GioiTinh, USER_NV,
       PASSWORD: Password, SDT, Email, DiaChi,
-      accessrights: req.body.AccessRight
+      Accessright: req.body.Accessright
     }
   )
 
@@ -156,4 +161,4 @@ let deleteUser = async (req, res) => {
   await connec.getDB().collection('NhanVien').deleteMany({ MaNV: MaNV.trim() })
   res.status(200).json({ message: 'delete sucsess' })
 }
-export default { getStaffPage, createUser, SignUser, deleteUser, updateUser };  
+export default { getStaffPage, createUser, SignUser, deleteUser, updateUser ,getInfoUser };  
