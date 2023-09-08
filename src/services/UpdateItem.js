@@ -66,7 +66,7 @@ class Customer {
     }
 }
 class User {
-    constructor({ MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, PASSWORD, SDT, Email, DiaChi, accessrights }) {
+    constructor({ MaNV, TenNV, NgaySinh, GioiTinh, USER_NV, PASSWORD, SDT, Email, DiaChi, Accessright }) {
         if (MaNV)
             this.MaNV = MaNV
         if (TenNV)
@@ -85,8 +85,8 @@ class User {
             this.Email = Email
         if (DiaChi)
             this.DiaChi = DiaChi
-        if (accessrights)
-            this.accessrights = accessrights
+        if (Accessright)
+            this.Accessright = Accessright
     }
 }
 class ServicesUpdate {

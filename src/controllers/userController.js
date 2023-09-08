@@ -14,8 +14,8 @@ const CheckSpecialCharacters = (arrData) => {
   else return false;
 }
 
-let getInfoUser  = async (req, res) => {
-  const _id = req.params.id 
+let getInfoUser = async (req, res) => {
+  const _id = req.params.id
   res.status(200).json({ result: await data.result('NhanVien', '', _id, "", "") });
 }
 
@@ -114,6 +114,8 @@ let updateUser = async (req, res) => {
   let {
     MaNV, TenNV, NgaySinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi, _id
   } = req.body.formData;
+  let Accessright = req.body?.Accessright
+
   let GioiTinh = req.body.Sex
   let arrData = [MaNV, TenNV, NgaySinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi];
   // check special characters
@@ -133,14 +135,7 @@ let updateUser = async (req, res) => {
   }
 
   let UpdateuserServices = new UpdateUserServices()
-
-  let updateItem = UpdateuserServices.getTransport(
-    {
-      MaNV, TenNV, NgaySinh, GioiTinh, USER_NV,
-      PASSWORD: Password, SDT, Email, DiaChi,
-      Accessright: req.body.Accessright
-    }
-  )
+  let updateItem = undefindAccess(UpdateuserServices, Accessright, Password, GioiTinh, MaNV, TenNV, NgaySinh, USER_NV, SDT, Email, DiaChi)
 
   let fileId = new mongoose.Types.ObjectId(_id);
 
@@ -149,16 +144,39 @@ let updateUser = async (req, res) => {
     $set: updateItem
   }
   )
+  console.log(updateUser)
+
   if (updateUser.acknowledged == true)
     return res.status(200).json({ message: "oke" })
   else
     return res.status(500).json({ message: "eror undefind" })
 }
 
+function undefindAccess(UpdateuserServices, Accessright, Password, GioiTinh, MaNV, TenNV, NgaySinh, USER_NV, SDT, Email, DiaChi) {
+  let updateItem = null
 
+  if (Accessright == undefined) {
+    updateItem = UpdateuserServices.getTransport(
+      {
+        MaNV, TenNV, NgaySinh, GioiTinh, USER_NV,
+        PASSWORD: Password, SDT, Email, DiaChi
+      }
+    )
+  }
+  else {
+    updateItem = UpdateuserServices.getTransport(
+      {
+        MaNV, TenNV, NgaySinh, GioiTinh, USER_NV,
+        PASSWORD: Password, SDT, Email, DiaChi,
+        Accessright
+      }
+    )
+  }
+  return updateItem
+}
 let deleteUser = async (req, res) => {
   let MaNV = req.params.item
   await connec.getDB().collection('NhanVien').deleteMany({ MaNV: MaNV.trim() })
   res.status(200).json({ message: 'delete sucsess' })
 }
-export default { getStaffPage, createUser, SignUser, deleteUser, updateUser ,getInfoUser };  
+export default { getStaffPage, createUser, SignUser, deleteUser, updateUser, getInfoUser };  
