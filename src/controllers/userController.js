@@ -29,7 +29,7 @@ let getStaffPage = async (req, res) => {
 let createUser = async (req, res) => {
   let { MaNV, TenNV, NgaySinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi } = req.body.formData;
   let { Accessright, Sex } = req.body;
-
+  console.log(Sex)
   if (TenNV?.length < 5)
     return res.status(404).json({ message: 'hoten must be at least 5' });
   let _Pass = _pass(pass_nv, repass_nv);
@@ -55,7 +55,7 @@ let createUser = async (req, res) => {
         NgayTao: Date.now(),
         Accessright,
       }
-      await connec.getDB().collection("NhanVien").insertOne(data)
+      // await connec.getDB().collection("NhanVien").insertOne(data)
 
       return res.status(201).json({ message: 'created successfully' });
     }
