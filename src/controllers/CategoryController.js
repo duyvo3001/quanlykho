@@ -44,7 +44,6 @@ let ImportCategory = async (req, res) => {
   }
   try {
     let result = await modelCaterory.Categorymodel(data)
-    console.log(result);
     if (result.acknowledged === true) {
       return res.status(200).json({ message: 'Create category success' });
     }

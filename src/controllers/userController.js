@@ -29,7 +29,6 @@ let getStaffPage = async (req, res) => {
 let createUser = async (req, res) => {
   let { MaNV, TenNV, NgaySinh, USER_NV, pass_nv, repass_nv, SDT, Email, DiaChi } = req.body.formData;
   let { Accessright, Sex } = req.body;
-  console.log(Sex)
   if (TenNV?.length < 5)
     return res.status(404).json({ message: 'hoten must be at least 5' });
   let _Pass = _pass(pass_nv, repass_nv);
@@ -67,7 +66,6 @@ let createUser = async (req, res) => {
 let SignUser = async (req, res) => {
 
   let { user_nv, pass_nv } = req.body.formData;
-  console.log(user_nv, pass_nv)
   let Repassword = "", user_id = '', accessrights = {};
 
   //check special characters
@@ -144,7 +142,6 @@ let updateUser = async (req, res) => {
     $set: updateItem
   }
   )
-  console.log(updateUser)
 
   if (updateUser.acknowledged == true)
     return res.status(200).json({ message: "oke" })

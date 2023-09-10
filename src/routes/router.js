@@ -22,16 +22,16 @@ const DashBoard = router.get('/Dashboard', authenToken, use(DashBoardController.
 
 const initAPIRoute = async (app) => {
     DashBoard
-    RouterWareHouse(router,authenToken, AccessHandler, use)
-    RouterCategory(router,authenToken, AccessHandler, use)
-    RouterCustomer(router,authenToken, AccessHandler, use)
-    RouterLogin(router,authenToken, AccessHandler, use)
-    RouterExport(router,authenToken, AccessHandler, use)
-    RouterProduct(router,authenToken, AccessHandler, use)
-    RouterSearch(router,authenToken, AccessHandler, use)
-    RouterSupplier(router,authenToken, AccessHandler, use)
-    RouterBrand(router,authenToken, AccessHandler, use) 
-    RouterReport(router,authenToken, AccessHandler, use)
+    RouterWareHouse(router, authenToken, AccessHandler, use)
+    RouterCategory(router, authenToken, AccessHandler, use)
+    RouterCustomer(router, authenToken, AccessHandler, use)
+    RouterLogin(router, authenToken, AccessHandler, use)
+    RouterExport(router, authenToken, AccessHandler, use)
+    RouterProduct(router, authenToken, AccessHandler, use)
+    RouterSearch(router, authenToken, AccessHandler, use)
+    RouterSupplier(router, authenToken, AccessHandler, use)
+    RouterBrand(router, authenToken, AccessHandler, use)
+    RouterReport(router, authenToken, AccessHandler, use)
     return app.use("/", router);
 }
 export default initAPIRoute  

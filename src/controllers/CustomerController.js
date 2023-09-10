@@ -66,7 +66,6 @@ let UpdateCustomer = async (req, res) => {
 
     let updateCustomerServices = new UpdateCustomerServices()
     let updateCus = updateCustomerServices.getTransport({ IDCustomer, NameCustomer, Phone, Email })
-    console.log(updateCus)
     let fileId = new mongoose.Types.ObjectId(_id);
 
     //check special characters

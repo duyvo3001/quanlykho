@@ -78,7 +78,6 @@ const SearchDateProduct = async (req, res) => {
   let datarender = await connec.getDB().collection("Hang").find({
     NgayNhap: { $gte: new Date("2023-6-01"), $lt: new Date("2023-07-01") }
   }).toArray();
-  console.log(datarender);
   return res.status(200).json({ result: datarender })
 }
 

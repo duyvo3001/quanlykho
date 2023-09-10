@@ -20,7 +20,6 @@ let importWarehouse = async (req, res) => { // render page import
 
     //check special characters
     let arrData = [MaKho, TenKho, DiaChi, SDT]
-    console.log(arrData);
     let e = CheckSpecialCharacters(arrData)
     if (e != false) return res.status(500).json({ message: 'chứa kí tự đặc biệt', Character: e })
 
@@ -54,7 +53,6 @@ let editWarehouse = async (req, res) => {
 
     let updateItemWarehouseServices = new UpdateWarehouseServices()
     let updateItem = updateItemWarehouseServices.getTransport({ MaKho, TenKho, DiaChi, SDT })
-    console.log(updateItem)
     let fileId = new mongoose.Types.ObjectId(_id);
 
     let arrData = [MaKho, TenKho, DiaChi, SDT,]

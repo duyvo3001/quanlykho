@@ -21,7 +21,6 @@ let ImportLinhkien = async (req, res) => {
 
   let { Category, TenLK, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe, TinhTrangHang } = req.body.formData;
   let arrData = [Category, MaThuongHieu, MaNCC, Color, Donvi, Soluong, MaKho, GiaBanLe];
-  console.log(arrData);
   //check null product
   for (let i = 0; i < arrData.length; i++) {
     if (arrData[i] == '' || arrData[i] == undefined) {
@@ -35,7 +34,6 @@ let ImportLinhkien = async (req, res) => {
     return res.status(500).json({ message: 'contains special characters', Character: e })
 
   let MaLK = await createIdProduct(Category, MaThuongHieu) // create IdProduct
-  console.log(MaLK)
   let data = {
     MaLK,
     Category,
@@ -74,7 +72,6 @@ let getManagePage = async (req, res) => {
 //post delete item linh kien  
 let deleteStock = async (req, res) => {
   let MaLK = req.params.item
-  console.log(MaLK)
   let Resultdata = await connec.getDB().collection('Hang').deleteMany({ MaLK })
 
   if (Resultdata.acknowledged == true && Resultdata.deletedCount == 1) {
@@ -255,7 +252,6 @@ let editBrand = async (req, res) => {
 
   let updateItemBrandServices = new UpdateItemBrandServices()
   let updateItem = updateItemBrandServices.getTransport({ MaThuongHieu })
-  console.log(updateItem)
   let fileId = new mongoose.Types.ObjectId(_id);
 
   let arrData = [MaThuongHieu]
