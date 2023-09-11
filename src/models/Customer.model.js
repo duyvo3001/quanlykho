@@ -10,7 +10,7 @@ const CustomerSchema = Joi.object({
 
     Phone: Joi.string().min(9).max(12).required(),
 
-    Email: Joi.string().email().required(),
+    Email: Joi.string().email().default(""),
 
     NgayTao: Joi.date().required()
 
