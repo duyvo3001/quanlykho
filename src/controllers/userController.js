@@ -75,14 +75,14 @@ let SignUser = async (req, res) => {
   }
 
   if (user_nv == '' || pass_nv == '' || user_nv == undefined || pass_nv == undefined)
-    return res.status(202).json({ message: "user or password is void" })
+    return res.status(202).json({ message: "account or password is incorrect" })
 
   const result = await connec.getDB().collection('NhanVien').find({
     USER_NV: user_nv?.trim()
   }).toArray()
 
   if (Object.keys(result).length == 0)
-    return res.status(202).json({ message: 'user is blank' })
+    return res.status(202).json({ message: 'account or password is incorrect' })
 
   for (let i = 0; i < Object.keys(result).length; i++) {
     Repassword = result[i].PASSWORD;
@@ -103,7 +103,7 @@ let SignUser = async (req, res) => {
       }
     }
     else {
-      return res.status(202).json({ message: "wrong pass" })
+      return res.status(202).json({ message: "account or password is incorrect" })
     }
   }
 }
