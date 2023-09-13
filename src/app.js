@@ -66,13 +66,9 @@ const bootserver = () => {
 
   app
     .use(function (err, req, res, next) {
-      //error handler
-      console.log(err);
       res.status(500).json({ message: false });
     })
     .use((req, res,err) => {
-      // 404 page error
-      console.log(err);
       res.status(500)
     })
     .listen(port, () => console.log(`Example app listening on port ${port}`));
