@@ -4,7 +4,6 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 import bodyParser from "body-parser";
-import configViewEngine from "./configs/ViewEngine.js";
 import connectionDBMG from "./configs/connectDBmongo.js";
 //session
 
@@ -62,8 +61,6 @@ const bootserver = () => {
     .use(bodyParser.json())
     .use(express.urlencoded({ extended: true }))
     .use(express.json());
-
-  configViewEngine(app);
 
   initAPIRoute(app);
 
