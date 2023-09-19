@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import connec from '../configs/connectDBmongo.js'
-import model from '../models/NhanVien.model.js'
 import data from "../services/renderdataHang";
 import { UpdateUserServices } from "../services/UpdateItem"
 import { _pass, test_pass } from '../services/hassPass';
