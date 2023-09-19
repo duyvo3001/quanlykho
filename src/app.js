@@ -4,7 +4,6 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 import bodyParser from "body-parser";
-import configViewEngine from "./configs/ViewEngine.js";
 import connectionDBMG from "./configs/connectDBmongo.js";
 //session
 
@@ -63,16 +62,21 @@ const bootserver = () => {
     .use(express.urlencoded({ extended: true }))
     .use(express.json());
 
-  configViewEngine(app);
-
   initAPIRoute(app);
 
   app
     .use(function (err, req, res, next) {
+<<<<<<< HEAD
       res.status(500).json({ message: false });//error handler
     })
     .use((req, res,err) => {
       res.status(500)// 404 page error
+=======
+      res.status(500).json({ message: false });
+    })
+    .use((req, res,err) => {
+      res.status(500)
+>>>>>>> f55195271244c401db6755a4c7e5e01600300143
     })
     .listen(port, () => console.log(`Example app listening on port ${port}`));
 };
