@@ -47,7 +47,6 @@ const bootserver = () => {
   app
     .use(
       isProduction
-        // ? morgan("combined", { stream: accessLogStream })
         ? morgan("combined")
         : morgan("dev")
     )
@@ -66,17 +65,10 @@ const bootserver = () => {
 
   app
     .use(function (err, req, res, next) {
-<<<<<<< HEAD
       res.status(500).json({ message: false });//error handler
     })
     .use((req, res,err) => {
       res.status(500)// 404 page error
-=======
-      res.status(500).json({ message: false });
-    })
-    .use((req, res,err) => {
-      res.status(500)
->>>>>>> f55195271244c401db6755a4c7e5e01600300143
     })
     .listen(port, () => console.log(`Example app listening on port ${port}`));
 };
