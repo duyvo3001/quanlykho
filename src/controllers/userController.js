@@ -15,6 +15,7 @@ const CheckSpecialCharacters = (arrData) => {
 
 let getInfoUser = async (req, res) => {
   const _id = req.params.id
+  console.info(_id)
   res.status(200).json({ result: await data.result('NhanVien', '', _id, "", "") });
 }
 
