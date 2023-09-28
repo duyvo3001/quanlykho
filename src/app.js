@@ -19,13 +19,13 @@ const app = express();
 app.use(function (req, res, next) {
 
   // Website you wish to allow to w
-  res.setHeader('Access-Control-Allow-Origin', "*");
+  res.setHeader('Access-Control-Allow-Origin','*');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
   // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
   // to the API (e.g. in case you use sessions)
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -53,7 +53,7 @@ const bootserver = () => {
     .use(helmet()) // protect nodejs
     .use(cors(
       {
-        origin: [process.env.UrlWebClient] ,
+        origin: [process.env.UrlWebClient],
         optionsSuccessStatus: 200
       }
     ))
@@ -67,7 +67,7 @@ const bootserver = () => {
     .use(function (err, req, res, next) {
       res.status(500).json({ message: false });//error handler
     })
-    .use((req, res,err) => {
+    .use((req, res, err) => {
       res.status(500)// 404 page error
     })
     .listen(port, () => console.log(`Example app listening on port ${port}`));
