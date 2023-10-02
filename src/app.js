@@ -6,9 +6,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import connectionDBMG from "./configs/connectDBmongo.js";
 //session
-
-const dotenv = require("dotenv");
-dotenv.config();
+import 'dotenv/config'
 
 const port = process.env.PORT || 3000;
 
