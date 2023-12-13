@@ -10,3 +10,4 @@ export const RouterSearch = (router,authenToken, AccessHandler, use) =>
         .get('/SearchInvoice', authenToken, use(SearchController.SearchInvoice))//read
         .get('/SearchUser', authenToken, use(SearchController.SearchUser))//read
         .get('/SearchCategory', authenToken, use(SearchController.SearchCategory))//read
+        .get('/SearchDetailProduct/:id', authenToken, use(SearchController.SearchDetailProduct))//read
