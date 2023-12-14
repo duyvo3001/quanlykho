@@ -122,9 +122,8 @@ const SearchCategory = async (req, res) => {
   return res.status(200).json({ result: datarender });
 };
 const SearchDetailProduct = async (req, res) => {
-  const { MaLK } = req.params.id;
-  console.log(req)
-  res.status(200).json({ result: await data.result("Hang", "", MaLK, "", "") });
+  const MaLK = req.params.id;
+  res.status(200).json({ result: await data.result('Hang', '', MaLK, '', '') });
 };
 export default {
   SearchDetailProduct,
